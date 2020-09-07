@@ -17,7 +17,7 @@
 #define ll long long
 #define MP make_pair
 // // for overflow
-#define int long long
+// #define int long long
 // #define MAX LONG_LONG_MAX
 // #define MIN LONG_LONG_MIN
 
@@ -27,15 +27,11 @@ using namespace std;
 // global declerations
 const size_t MAXN = 1e5 +7;
 
-void ck(){
-    int n;
-    cin >> n;
-    int a;
-    int ans = 0 ,suf = 0;
-    for(int i = 0;i < n ;i++){cin >> a;ans = max(0LL ,ans + a);}
-    cout <<ans<<"\n";
-    return;
+
+void check(){
+	
 }
+
 int32_t main(){
 	ios_base::sync_with_stdio(false); cin.tie(NULL); 
 	cin.exceptions(cin.failbit);
@@ -44,7 +40,7 @@ int32_t main(){
 	cin >> t;
 
 	while(t--){
-		ck();
+		check();
 	}
 
 	return 0;
