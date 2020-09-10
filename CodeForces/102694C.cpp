@@ -23,86 +23,57 @@
 #define MP make_pair
 
 using namespace std;
-const uint64_t MAXN = 1e5 + 7;
-int n, l;
-vector<vector<int>> adj(MAXN ,vector<int>(0));
 
-int timer;
+const uint64_t MAXN = 1e5 + 7;
+vector<vector<int>> adj(MAXN ,vector<int>(0)) ,up;
 vector<int> tin, tout ,h;
-vector<vector<int>> up;
+int timer, n, l;;
 
 void dfs(int v, int p){
     tin[v] = ++timer;
-    up[v][0] = p;
-    h[v] = h[p]+1;
-    for (int i = 1; i <= l; ++i)
-        up[v][i] = up[up[v][i-1]][i-1];
-
-    for (int u : adj[v]) {
-        if (u != p)
-            dfs(u, v);
-    }
-
+    up[v][0] = p;h[v] = h[p]+1;
+    for (int i = 1; i <= l; ++i)up[v][i] = up[up[v][i-1]][i-1];
+    for (int u : adj[v]) {if (u != p)dfs(u, v);}
     tout[v] = ++timer;
 }
 
-bool is_ancestor(int u, int v){
-    return tin[u] <= tin[v] && tout[u] >= tout[v];
-}
+inline bool is_ancestor(int u, int v){return tin[u] <= tin[v] && tout[u] >= tout[v];}
 
 int lca(int u, int v){
-    if (is_ancestor(u, v))
-        return u;
-    if (is_ancestor(v, u))
-        return v;
-    for (int i = l; i >= 0; --i) {
-        if (!is_ancestor(up[u][i], v))
-            u = up[u][i];
-    }
+    if (is_ancestor(u, v)) return u;
+    if (is_ancestor(v, u)) return v;
+    for (int i = l; i >= 0; --i) {if (!is_ancestor(up[u][i], v))u = up[u][i];}
     return up[u][0];
 }
 
 void preprocess(int root) {
-    tin.resize(n);
-    tout.resize(n);
-    h.resize(n);
-    h[root] = 0;
-    timer = 0;
-    l = ceil(log2(n));
+    tin.resize(n); tout.resize(n);
+    h.resize(n); h[root] = 0;
+    timer = 0; l = ceil(log2(n));
     up.assign(n, vector<int>(l + 1));
     dfs(root, root);
 }
 
 int goUp(int c ,int u){
     while(c >= 0){
-        int i; 
-        // for(i = 0; i < l;i++){if(i<<1 <= c)continue;else break;}
-        for(i = 0;(i <= l && i<<1 <= c);i++){} 
-        u = up[u][i-1];
-        cout <<i <<"--";
-        c -= i-1;
-    }
-    return u;
+        int i; for(i = 0;(i <= l && 1<<i <= c);i++){} 
+        u = up[u][i-1];c -= 1<<(i);
+    }return u;
 }
-
 
 int dist(int u ,int v ,int c){
-    int _lca = lca(u ,v);
-    // cout << h[u] <<" "<< h[_lca]<<" "<< h[v];
-    int total =  (h[u] - h[_lca]) + (h[v] - h[_lca]);
+    int _lca = lca(u ,v) ,total = ((h[u] - h[_lca]) + (h[v] - h[_lca]));
     if(c >= total) return v;
-    if(c < (h[u] - h[_lca])) return goUp(c ,u);
-    return goUp(total-c ,u);
-        
+    if(c <= (h[u] - h[_lca])) return goUp(c ,u);
+    return goUp(total-c ,v);        
 }
 
-void check(){
+void ck(){
     int m ,q ,u ,v ,c;
     cin >> n;
     for(int i = 0 ;i < n-1 ; i++){ // 0 based
         cin >> u >> v;u--;v--;
-        adj[v].PB(u);
-        adj[u].PB(v);
+        adj[v].PB(u);adj[u].PB(v);
     }
     preprocess(0);
     cin >> q;
@@ -113,7 +84,6 @@ void check(){
 }
 
 int32_t main(){
-    ios_base::sync_with_stdio(false); cin.tie(NULL);
-    check();
+    ios_base::sync_with_stdio(false); cin.tie(NULL);ck();
     return 0;
 }
