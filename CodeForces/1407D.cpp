@@ -25,93 +25,69 @@
 using namespace std;
 
 // global declerations
-const size_t MAXN = 1e5 +7;
-int n ,da ,db;
-
-int timer ,dist[MAXN] ,l;
-vector<int> tin, tout ,h;
-vector<vector<int>> up ,adj;
-
-void dfs(int v, int p){
-	tin[v] = ++timer;
-	up[v][0] = p;
-	h[v] = h[p]+1;
-	for (int i = 1; i <= l; ++i)up[v][i] = up[up[v][i-1]][i-1];
-	for (int u : adj[v]) {if (u != p) dfs(u, v);}
-	tout[v] = ++timer;
-}
-
-bool is_ancestor(int u, int v){return tin[u] <= tin[v] && tout[u] >= tout[v];}
-
-int lca(int u, int v){
-	if (is_ancestor(u, v))return u;
-	if (is_ancestor(v, u))return v;
-	for (int i = l; i >= 0; --i) {if (!is_ancestor(up[u][i], v))u = up[u][i];}
-	return up[u][0];
-}
-
-void preprocess(int root) {
-	tin.resize(n);tout.resize(n);h.resize(n);h[root] = 0;
-	timer = 0;l = ceil(log2(n));
-	up.assign(n, vector<int>(l + 1));
-	dfs(root, root);
-}
-
-int dt(int u ,int v){
-	int _lca = lca(u ,v);
-	return (h[u] - h[_lca]) + (h[v] - h[_lca]);
-}
-
-void bfs(int v) {
-	memset(dist ,-1 ,sizeof(dist));dist[v] = 0;
-	queue<int> q;
-	q.push(v);
-	int u;
-	while(!q.empty()){
-		v = q.front();q.pop();
-		for(int u :adj[v]){if(dist[u] == -1){dist[u] = dist[v] + 1;q.push(u);}}
-	}
-} 
-
-pair<int ,int> farthest(){
-	int _max = -1 ,node = -1;
-	for(int i = 0 ;i <= n ;i++) if(dist[i] > _max) {_max = dist[i];node = i;}
-	return MP(node ,_max);
-}
-
-int diam(int u){
-	bfs(0);
-	pair<int ,int> last = farthest();
-	bfs(last.F);
-	return farthest().S;
-}
+const size_t MAXN = 3*(1e5 +7);
+const int INF = 1e9 + 1;
+int h[MAXN], dp[MAXN], lge[MAXN], lle[MAXN], rge[MAXN], rle[MAXN];
+vector<int> jumps[MAXN];
 
 void check(){
-	int a ,b ,u ,v;
-	cin >> n >> a >> b >> da >> db;a--;b--;
-	adj.assign(n+1 ,vector<int>(0));
-
-	for(int i = 0 ;i < n-1; i++) {
-		cin >> u >> v;u--;v--;
-		adj[u].PB(v);
-		adj[v].PB(u);
+	int n;
+	cin >> n;
+	for(int i = 0 ;i < n; i++){
+		cin >> h[i];
+		dp[i] = INF;
 	}
-	preprocess(0);
-	// case 1)
-	if(dt(a ,b) <= da){cout << "Alice\n";return;}
-	// case 2)
-	if((2*da) >= diam(0)){cout << "Alice\n";return;}
-	// case 3)
-	if(db > (2*da)){cout << "Bob\n";return;}
-	// case 4)
-	cout << "Alice\n";return;
+	dp[0] = 0;
+	vector<pair<int ,int>> st;
+	st.reserve(MAXN*2);
+	for(int i = 0; i < n ; i++){ // nearest greater from left
+		while(!st.empty() && st.back().F < h[i]) st.pop_back();
+		if(st.empty()) lge[i] = -1;
+		else lge[i] = st.back().S;
+		st.PB({h[i] ,i});
+	}
+	st.clear();
+	for(int i = 0; i < n ; i++){ // nearest less from left
+		while(!st.empty() && st.back().F > h[i]) st.pop_back();
+		if(st.empty()) lle[i] = -1;
+		else lle[i] = st.back().S;
+		st.PB({h[i] ,i});
+	}
+	st.clear();
+	for(int i = n-1; i >= 0 ; i--){ // nearest greater from right
+		while(!st.empty() && st.back().F < h[i]) st.pop_back();
+		if(st.empty()) rge[i] = -1;
+		else rge[i] = st.back().S;
+		st.PB({h[i] ,i});
+	}
+	st.clear();
+	for(int i = n-1; i >= 0 ; i--){ // nearest less from right
+		while(!st.empty() && st.back().F > h[i]) st.pop_back();
+		if(st.empty()) rle[i] = -1;
+		else rle[i] = st.back().S;
+		st.PB({h[i] ,i});
+	}
+	
+	for(int i = 0; i < n ;i++){
+		if(rle[i] != -1) jumps[i].PB(rle[i]);
+		if(rge[i] != -1) jumps[i].PB(rge[i]);
+		if(lle[i] != -1) jumps[lle[i]].PB(i);
+		if(lge[i] != -1) jumps[lge[i]].PB(i);
+	}
+	for (int i = 0; i < n; i++) {
+        for (int to : jumps[i]) {
+            dp[to] = min(dp[to], dp[i] + 1);
+        }
+    }
+    cout << dp[n - 1]<<"\n";
+    return;
 }
 
 int32_t main(){
 	ios_base::sync_with_stdio(false); cin.tie(NULL); 
 	cin.exceptions(cin.failbit);
-	int t;
-	cin >> t;
+	int t = 1;
+	// cin >> t;
 	while(t--){check();}
 	return 0;
 }
