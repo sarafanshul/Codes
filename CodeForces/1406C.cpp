@@ -10,7 +10,7 @@
 #define S second
 #define ll long long
 #define MP make_pair
-// #define int long long
+#define int long long
 // #define MAX LONG_LONG_MAX
 // #define MIN LONG_LONG_MIN
 #ifdef LOCAL // setting up print debugging (yes lol)
@@ -26,48 +26,59 @@ using namespace std;
 
 const size_t MAXN = 1e5 +7;
 
+vector<int> Centroid(const vector<vector<int>> &g) {
+    int n = g.size();
+    vector<int> centroid;
+    vector<int> sz(n);
+    function<void (int, int)> dfs = [&](int u, int prev) {
+            sz[u] = 1;
+            bool is_centroid = true;
+            for (auto v : g[u]) if (v != prev) {
+                    dfs(v, u);
+                    sz[u] += sz[v];
+                    if (sz[v] > n / 2) is_centroid = false;
+            }
+            if (n - sz[u] > n / 2) is_centroid = false;
+            if (is_centroid) centroid.push_back(u);
+    };
+    dfs(0, -1);
+    return centroid;
+}
+int leaf = -1;
+void dfs1(vector<vector<int>> &adj ,int v ,int par){
+	for(int u : adj[v]){
+		if(u != par){
+			if(adj[u].size() == 1){leaf = u;return;}
+			dfs1(adj ,u ,v);
+		}
+	}
+}
 
 void check(){
-	int n;
+	int n ,u ,v;
 	cin >> n;
-	vector<vector<int>> adj(n+1 ,vector<int>(0));
-	int in[n+1] = {0} ,out[n+1] = {0} ,par[n+1];
-	// 1 based indexing
-	for(int i = 0; i < n-1; i++){
+	vector<vector<int>> adj(n ,vector<int>(0));
+	vector<int> par(n ,-1);
+	int last;
+	for(int i = 0; i < n-1;i++){
 		cin >> v >> u;
-		adj[v].PB(u);adj[u].PB(v);
-		in[u]++;out[v]++;
+		v-- ,u--;
+		adj[v].PB(u);
+		adj[u].PB(v);
 		par[u] = v;
+		par[v] = u;
+		last = u;
 	}
-	queue<int> q;
-	int l1 = -1 ,l2 = -1;
-	int ad1 = 0 ,ad2 = 0;
-	for(int i = 1; i <= n ;i++) if(out[i] == 0)q.push(i);
-	for(int i = 1; i <= n ;i++) 
-		if(out[i] == 0){
-			if (!ad1) ad1 = i;
-			if (!ad2){
-				if(par[ad1] != par[ad2]) ad2 = i;
-			}
-		}
-	int n1 = n;
-	while(!q.empty()){
-		v = q.front();q.pop();
-		n1--;
-		out[par[v]]--;
-		for(int i = 1; i <= n ;i++) if(out[i] == 0)q.push(i);
-		if(q.size() == 1){
-			cout << l1<<" " << l2<<"\n";
-			cout << l1<<" " << l2<<"\n";
-			return;
-		}
-		if((q.size() == 2) && (n - n1 == 2)){
-			cout << ad1 << " " << par[ad1] << "\n";
-			cout << par[ad2] << " " << ad1 << "\n";
-			return;			
-		}
-		l1 = v;l2 = par[v];
+	vector<int> cnt = Centroid(adj);
+	if(cnt.size() == 1){
+		cout<< par[last]+1 << " " << last+1<<"\n";
+		cout<< par[last]+1 << " " << last+1<<"\n";return;
 	}
+	// 2 cecntroids -> select one  ,remove leaf node from anathor ,add to first
+	dfs1(adj ,cnt[0] ,cnt[1]);
+// 	cout << leaf << "--\n";
+	cout << par[leaf]+1<< " " << leaf+1 << "\n";
+	cout << cnt[1]+1<< " " << leaf+1 << "\n";
 }
 
 int32_t main(){

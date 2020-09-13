@@ -28,20 +28,36 @@ const size_t MAXN = 1e5 +7;
 
 
 void check(){
-	int n;
-	cin >> n;
-	vector<ll> cnt(1001 ,0) ,a(n+1);
-	for(int i = 0; i < n ;i++){cin >> a[i]; cnt[a[i]]++;}
-	ll x ,y;
-	for(int i = 100; i >= 0 ;i--) if(cnt[i] == 0) x = i;
-	for(int i = 100; i >= 0 ;i--) if(cnt[i] <= 1) y = i;
-	cout << x+y<<"\n";
+    long long n, k, x, ans = 0;
+    cin >> n >> k;
+    long long ara[n], sum[n];
+    for (int i = 0; i < n; i++) {
+        cin >> ara[i];
+        if (i == 0) sum[0] = ara[0];
+        else sum[i] = sum[i-1] + ara[i];
+    }
+
+    long long mn = (long long) 1e16;
+    for (int i = 0; i < n-k+1; i++) {
+        if (i == 0) x = sum[i+k-1];
+        else x = sum[i+k-1] - sum[i-1];
+        if (x < 0) x *= -1;
+        if (x < mn) {
+            mn = x;
+            ans = (long long) i;
+        }
+    }
+    cout << ans+1;
 }
 
 int32_t main(){
 	ios_base::sync_with_stdio(false); cin.tie(NULL); 
-	cin.exceptions(cin.failbit);
-	int t;	cin >> t;
-	while(t--)check();
+// 	cin.exceptions(cin.failbit);
+	int t = 1;	
+	// cin >> t;
+	for(int i = 1 ; i <= t ;i++){
+		// cout << "Case "<< i << ":\n";
+		check();
+	}
 	return 0;
 }

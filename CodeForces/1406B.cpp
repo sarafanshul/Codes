@@ -25,23 +25,40 @@ void __prnt(){cerr<<endl;} template<class T, class...Ts>void __prnt(T&&a,Ts&&...
 using namespace std;
 
 const size_t MAXN = 1e5 +7;
-
+long long ans,a[100005];
 
 void check(){
 	int n;
+	long long mx = -1e9;
 	cin >> n;
-	vector<ll> cnt(1001 ,0) ,a(n+1);
-	for(int i = 0; i < n ;i++){cin >> a[i]; cnt[a[i]]++;}
-	ll x ,y;
-	for(int i = 100; i >= 0 ;i--) if(cnt[i] == 0) x = i;
-	for(int i = 100; i >= 0 ;i--) if(cnt[i] <= 1) y = i;
-	cout << x+y<<"\n";
+	for(int i=1;i<=n;i++)cin >> a[i],mx=max(mx,a[i]);
+
+	sort(a+1,a+n+1,[](long long x,long long y){return abs(x)>abs(y);});
+	
+	if(mx<0){cout<<a[n]*a[n-1]*a[n-2]*a[n-3]*a[n-4]<<'\n';return;}
+	
+	ans=a[1]*a[2]*a[3]*a[4]*a[5];
+	for(int i=6;i<=n;i++){
+	    for(int j=1;j<=5;j++){
+	        long long tmp=a[i];
+	        for(int k=1;k<=5;k++){
+	            if(k!=j)tmp*=a[k];
+	        }
+	        ans=max(ans,tmp);
+	    }
+	}
+	
+	cout << ans <<"\n";
 }
 
 int32_t main(){
 	ios_base::sync_with_stdio(false); cin.tie(NULL); 
 	cin.exceptions(cin.failbit);
-	int t;	cin >> t;
-	while(t--)check();
+	int t = 1;	
+	cin >> t;
+	for(int i = 1 ; i <= t ;i++){
+		// cout << "Case "<< i << ":\n";
+		check();
+	}
 	return 0;
 }

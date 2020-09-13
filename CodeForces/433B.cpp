@@ -10,7 +10,7 @@
 #define S second
 #define ll long long
 #define MP make_pair
-// #define int long long
+#define int long long
 // #define MAX LONG_LONG_MAX
 // #define MIN LONG_LONG_MIN
 #ifdef LOCAL // setting up print debugging (yes lol)
@@ -28,20 +28,28 @@ const size_t MAXN = 1e5 +7;
 
 
 void check(){
-	int n;
+	int n  ,q ,t ,l ,r;
 	cin >> n;
-	vector<ll> cnt(1001 ,0) ,a(n+1);
-	for(int i = 0; i < n ;i++){cin >> a[i]; cnt[a[i]]++;}
-	ll x ,y;
-	for(int i = 100; i >= 0 ;i--) if(cnt[i] == 0) x = i;
-	for(int i = 100; i >= 0 ;i--) if(cnt[i] <= 1) y = i;
-	cout << x+y<<"\n";
+	vector<int> a(n+1 ,0), s(n+1 ,0);
+	for(int i = 1; i <= n; i++) {cin >> a[i]; s[i] = a[i];}
+	sort(ALL(s));
+	for(int i = 1; i <= n ;i++){
+		a[i] += a[i-1];
+		s[i] += s[i-1];
+	}	
+	cin >> q;
+	while(q--){
+		cin >> t >> l >> r;
+		if(t == 1){
+			cout << a[r] - a[l-1]<<"\n";
+		}else cout<< s[r] - s[l-1] << "\n";
+	}
 }
 
 int32_t main(){
 	ios_base::sync_with_stdio(false); cin.tie(NULL); 
-	cin.exceptions(cin.failbit);
-	int t;	cin >> t;
+// 	cin.exceptions(cin.failbit);
+	int t =1 ;//	cin >> t;
 	while(t--)check();
 	return 0;
 }
