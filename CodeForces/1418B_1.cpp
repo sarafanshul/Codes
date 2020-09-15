@@ -1,9 +1,28 @@
+/*
+We can think about the problem as follows: 
+	we want to order the ai to create the longest possible 
+	nonnegative prefix of pn,pn−1,…,p1 
+		(in other words, the smallest possible 
+		k such that pn≥0,pn−1≥0,…,pk≥0).
+
+Notice that pn=a1+⋯+an is fixed. 
+We can also see pn−1=pn−an, pn−2=pn−an−an−1, etc. 
+So we should make an as small as possible (assuming it is unlocked), 
+then an−1, and so on. 
+In other words the unlocked ai should be sorted in decreasing order from left to right. 
+To prove this, you can use an exchange argument: 
+	if you consider an arrangement of the ai where two consecutive unlocked 
+	values are not in decreasing order, we can swap them with each other. 
+	This swap does not make any of the pi smaller (it can only make some pi bigger). 
+	Thus we can start with the optimal ordering and repeatedly apply swaps until 
+	the unlocked values are sorted, without making anything worse.
+// by neal
+*/
 #pragma GCC optimize("Ofast")  
 #pragma GCC target("avx,avx2,fma") 
 #pragma comment(linker, "/stack:200000000")
 #pragma GCC optimize("unroll-loops")
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
 #define ALL(x) x.begin(),x.end()
 #define PB push_back
 #define EB emplace_back
@@ -17,7 +36,7 @@
 // #define MIN LONG_LONG_MIN
 
 using namespace std;
-using namespace __gnu_pbds;
+
 #ifdef CUST_DEBUG // </COMMENT> the {ostream operator} modification(for redifination conflicts) after endif
 template<class K, class V>ostream& operator<<(ostream&s,const pair<K,V>&p){s<<'<'<<p.x<<','<<p.y<<'>';return s;}
 template<class K, class V>ostream& operator<<(ostream&s,const pair<K,V>&p){s<<'<'<<p.F<<','<<p.S<<'>';return s;}
@@ -33,50 +52,24 @@ template<typename A, typename B> ostream& operator<<(ostream &cout, pair<A, B> c
 template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<<"[";for(int i=0;i<v.size();i++){if(i)cout<<", ";cout<<v[i];}return cout<<"]";}
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 
-const size_t MAXN = 1e5 +7;
-
-
-struct custom_hash {
-    static uint64_t splitmix64(uint64_t x) {
-        // http://xorshift.di.unimi.it/splitmix64.c
-        x += 0x9e3779b97f4a7c15;
-        x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
-        x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
-        return x ^ (x >> 31);
-    }
-    size_t operator()(pair<uint64_t,uint64_t> x) const {
-        static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
-        return splitmix64(x.first + FIXED_RANDOM)^(splitmix64(x.second + FIXED_RANDOM) >> 1);
-    }
-};
-gp_hash_table<pair<long long, long long> ,long long ,custom_hash> m;
-
-deque<pair<ll,ll> > q;
-// map<pair<int,int>,int> m;
-ll x[]={1,-1,0,0,-1,-1,1,1},y[]={0,0,1,-1,1,-1,1,-1};
-ll x0,y0,x1,y1,n;
+const size_t MAXN = 1e3 +7;
 
 void check(){
-	ll xx ,yy ,ri ,ai ,bi;
-	cin >> y0 >> x0 >> y1 >> x1 >> n;
-	while(n--){
-		cin >> ri >> ai >> bi;
-		for(int j = ai; j <= bi ;j++)m[MP(ri ,j)] = -1;
-	}
-	m[MP(y0 ,x0)] = 0;
-	q.PB(MP(y0 ,x0));
-	while(!q.empty()){
-		yy = q.front().F;
-		xx = q.front().S;
-		q.pop_front();
-		for(int i = 0 ;i < 8 ;i++){
-			if(m[MP(yy+y[i], xx+x[i])] < 0){
-				m[MP(yy+y[i],xx+x[i])]=m[MP(yy,xx)]+1;
-				q.PB(MP(yy+y[i],xx+x[i]));
-			}
-		}
-	}
-	cout << m[MP(y1,x1)] << "\n";
+	ll n ;
+	cin >> n;
+	vector< ll > a(n) ,l(n) ,v;v.reserve(MAXN);
+	for(int i = 0; i < n ;i++) cin >>a[i];
+	for(int i = 0; i < n ;i++) cin >>l[i];
+
+	for(int i = 0; i < n ;i++) if(! l[i]) v.PB(a[i]);
+
+	sort(ALL(v));reverse(ALL(v));
+	ll idx = 0;
+	for(ll i = 0; i < n ;i++)
+		if(! l[i]) a[i] = v[idx++];
+
+	for(int i = 0; i < n ;i++) cout << a[i]<<" ";
+	cout << "\n";
 }
 
 int32_t main(){
@@ -85,7 +78,7 @@ int32_t main(){
 	#endif
 	// cin.exceptions(cin.Failbit);
 	int t = 1;	
-	// cin >> t;
+	cin >> t;
 	for(int i = 1 ; i <= t ;i++){
 		// cout << "Case "<< i << ":\n";
 		check();

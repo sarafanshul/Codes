@@ -33,50 +33,79 @@ template<typename A, typename B> ostream& operator<<(ostream &cout, pair<A, B> c
 template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<<"[";for(int i=0;i<v.size();i++){if(i)cout<<", ";cout<<v[i];}return cout<<"]";}
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 
-const size_t MAXN = 1e5 +7;
-
-
 struct custom_hash {
     static uint64_t splitmix64(uint64_t x) {
-        // http://xorshift.di.unimi.it/splitmix64.c
         x += 0x9e3779b97f4a7c15;
         x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
         x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
         return x ^ (x >> 31);
     }
-    size_t operator()(pair<uint64_t,uint64_t> x) const {
+
+    size_t operator()(uint64_t x) const {
         static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
-        return splitmix64(x.first + FIXED_RANDOM)^(splitmix64(x.second + FIXED_RANDOM) >> 1);
+        return splitmix64(x + FIXED_RANDOM);
     }
 };
-gp_hash_table<pair<long long, long long> ,long long ,custom_hash> m;
 
-deque<pair<ll,ll> > q;
-// map<pair<int,int>,int> m;
-ll x[]={1,-1,0,0,-1,-1,1,1},y[]={0,0,1,-1,1,-1,1,-1};
-ll x0,y0,x1,y1,n;
+const size_t MAXN = 1e5 +7;
+
+template<typename B = bool ,typename T = long long >
+B calc(T i ,T j ,T xx , T yy ,T x){
+	double ans = sqrt(pow(xx - j, 2) + pow(yy - i, 2) * 1.0);
+	ans = ceil(ans);
+	if(ans <= x) return 0;
+	return 1;
+}
+
+bool can[26];
+int n, m, k, q, res = 0;
+char key[31][31];
+char text[1000000];
+vector<pair<int, int>> posKey[26], shift;
+ 
+int dist(int i, int j, int shr, int shc){
+	return (i - shr)*(i - shr) + (j - shc)*(j - shc);
+}
+ 
+bool check(int i, int j){
+	for (int w = 0;w < shift.size();w++){
+		int dis = dist(i, j, shift[w].first, shift[w].second);
+		if (dis <= k*k)
+			return true;
+	}
+	return false;
+}
+ 
 
 void check(){
-	ll xx ,yy ,ri ,ai ,bi;
-	cin >> y0 >> x0 >> y1 >> x1 >> n;
-	while(n--){
-		cin >> ri >> ai >> bi;
-		for(int j = ai; j <= bi ;j++)m[MP(ri ,j)] = -1;
-	}
-	m[MP(y0 ,x0)] = 0;
-	q.PB(MP(y0 ,x0));
-	while(!q.empty()){
-		yy = q.front().F;
-		xx = q.front().S;
-		q.pop_front();
-		for(int i = 0 ;i < 8 ;i++){
-			if(m[MP(yy+y[i], xx+x[i])] < 0){
-				m[MP(yy+y[i],xx+x[i])]=m[MP(yy,xx)]+1;
-				q.PB(MP(yy+y[i],xx+x[i]));
-			}
+	cin >> n >> m >> k;
+	for (int i = 0;i < n; i++) cin >> keys[i];
+
+	for (int i = 0;i<n;i++){
+		for (int j = 0;j < m;j++){
+			if (key[i][j] == 'S') shift.push_back(make_pair(i, j));// position of each key
+			else posKey[key[i][j] - 'a'].push_back(make_pair(i, j));
 		}
 	}
-	cout << m[MP(y1,x1)] << "\n";
+
+	for (int i = 0;i<26; i++){
+		for (int j = 0;j <posKey[i].size() && !can[i]; j++){
+		//check of each key if can press on it with one hand
+			can[i] = can[i] | check(posKey[i][j].first, posKey[i][j].second);
+		}
+	}
+
+	cin >> q >> text;
+	for (int i = 0;i < q;i++){
+		if (islower(text[i])){
+			if (posKey[text[i] - 'a'].empty()){res = -1;break;}
+		}else{
+			text[i] = tolower(text[i]);
+			if (shift.empty() || posKey[text[i] - 'a'].empty()){res = -1;break;}
+			if (!can[text[i] - 'a'])++res;
+		}
+	}
+	cout << res << "\n";
 }
 
 int32_t main(){

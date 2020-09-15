@@ -1,3 +1,23 @@
+/*
+We can think about the problem as follows: 
+	we want to order the ai to create the longest possible 
+	nonnegative prefix of pn,pn−1,…,p1 
+		(in other words, the smallest possible 
+		k such that pn≥0,pn−1≥0,…,pk≥0).
+
+Notice that pn=a1+⋯+an is fixed. 
+We can also see pn−1=pn−an, pn−2=pn−an−an−1, etc. 
+So we should make an as small as possible (assuming it is unlocked), 
+then an−1, and so on. 
+In other words the unlocked ai should be sorted in decreasing order from left to right. 
+To prove this, you can use an exchange argument: 
+	if you consider an arrangement of the ai where two consecutive unlocked 
+	values are not in decreasing order, we can swap them with each other. 
+	This swap does not make any of the pi smaller (it can only make some pi bigger). 
+	Thus we can start with the optimal ordering and repeatedly apply swaps until 
+	the unlocked values are sorted, without making anything worse.
+// by neal
+*/
 #pragma GCC optimize("Ofast")  
 #pragma GCC target("avx,avx2,fma") 
 #pragma comment(linker, "/stack:200000000")
@@ -9,6 +29,7 @@
 #define F first
 #define S second
 #define ll long long
+#define double long double
 #define MP make_pair
 // #define int long long
 // #define MAX LONG_LONG_MAX
@@ -16,7 +37,8 @@
 
 using namespace std;
 
-#ifdef LOCAL // setting up print debugging (yes lol)
+#ifdef LOCAL // </COMMENT> the {ostream operator} modification(for redifination conflicts) after endif and use endl(for flush)
+template<class K, class V>ostream& operator<<(ostream&s,const pair<K,V>&p){s<<'<'<<p.x<<','<<p.y<<'>';return s;}
 template<class K, class V>ostream& operator<<(ostream&s,const pair<K,V>&p){s<<'<'<<p.F<<','<<p.S<<'>';return s;}
 template<class T, class=typename T::value_type, class=typename enable_if<!is_same<T,string>::value>::type>
 ostream& operator<<(ostream&s,const T&v){s<<'[';for(auto&x:v){s<<x<<", ";}if(!v.empty()){s<<"\b\b";}s<<']';return s;}
@@ -25,6 +47,7 @@ void __prnt(){cerr<<endl;} template<class T, class...Ts>void __prnt(T&&a,Ts&&...
 #else
 #define print(...)
 #endif
+
 template<typename A> ostream& operator<<(ostream &cout, vector<A> const &v);
 template<typename A, typename B> ostream& operator<<(ostream &cout, pair<A, B> const &p) { return cout << "(" << p.F << ", " << p.S << ")"; }
 template<typename A> ostream& operator<<(ostream &cout, vector<A> const &v) {
@@ -36,15 +59,29 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 
 const size_t MAXN = 1e5 +7;
 
-// ⌈a/b⌉ = ⌊(a+b−1)/b⌋
-template<typename T = long long >
-inline T __ceil(T a ,T b){return (a + b - 1)/b;}
-
 void check(){
-	ll x ,y ,k;
-	cin >> x >> y >> k;
-    ll ans = __ceil(((k-1) + k*y) ,(x-1)); //or use long double Typecasting
-	cout << ans+k<<"\n";
+	ll n;
+	cin >> n;
+	vector<ll> a(n) ,l(n ,0);
+	for(int i = 0; i < n ;i++) cin >> a[i];
+	for(int i = 0; i < n ;i++) cin >> l[i];
+
+	vector<ll> unlocked; unlocked.reserve(1001);
+	for(int i = 0; i < n; i++)
+		if(! l[i] ) unlocked.PB(i);
+	
+	vector<ll> order = unlocked;
+
+	sort(ALL(order) ,[&](ll x ,ll y){
+		return a[x] > a[y]; // follow strict weak ordering
+	});
+	vector<ll> b = a;
+	for(size_t i = 0 ;i < unlocked.size() ;i++){
+		b[unlocked[i]] = a[order[i]];
+	}
+
+	for(ll i : b) cout << i <<" ";
+	cout << "\n";
 }
 
 int32_t main(){
