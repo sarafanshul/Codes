@@ -35,7 +35,15 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 const size_t MAXN = 1e5 +7;
 
 void check(){
-	
+	ll n ,m ,r = 0;
+	cin >> n >> m;
+	while(n!=m){
+		if(m > n){
+			if(m%2 == 0) m /= 2 ,r++;
+			else m++ ,r++;
+		} else if(n > m) m++ ,r++;
+	}
+	cout << r;
 }
 
 int32_t main(){

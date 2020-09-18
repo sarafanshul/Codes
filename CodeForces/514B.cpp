@@ -34,8 +34,24 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 
 const size_t MAXN = 1e5 +7;
 
+// Points (x1, y1), (x2, y2), (x3, y3) are on the same line,
+// if (x2 - x1)(y3 - y1) = (x3 - x1)(y2 - y1).
 void check(){
-	
+	ll n, x0, y0, s(0), dx1, dy1, dx2, dy2, a[1000][2];
+    cin >> n >> x0 >> y0;
+    bool k[1000];
+    for (int i = 0; i < n; i++) cin >> a[i][0] >> a[i][1];
+
+    for (int i = 0; i < n; i++){
+        if (k[i]) continue;
+        s++;
+        dx1 = a[i][0] - x0, dy1 = a[i][1] - y0;
+        for (int j = 0; j < n; j++){
+            dx2 = a[j][0] - x0, dy2 = a[j][1] - y0;
+            if (dx2 * dy1 == dx1 * dy2) k[j] = 1;
+        }
+    }
+    cout << s;
 }
 
 int32_t main(){

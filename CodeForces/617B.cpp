@@ -33,9 +33,28 @@ template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 
 const size_t MAXN = 1e5 +7;
-
 void check(){
-	
+	ll n;
+	cin >> n;
+	vector<ll> a(n) ,b;
+	ll oc = 0;
+	for(int i = 0; i< n; i++){
+		cin >> a[i];
+		if(a[i]) oc++;
+	}
+	if(!oc) {cout << 0 ; return;}
+	ll idx1 = -1 ,zc = 0;
+	for(int i = 0 ;i < n ;i++){
+		if(a[i] == 1) {
+			b.PB(zc);
+			idx1 = i ,zc = 0;}
+		if(a[i] == 0 && idx1 != -1)zc++;
+	}
+	ll ans = 1;
+	for(int i : b){
+		ans *= (i+1);
+	}
+	cout << ans;
 }
 
 int32_t main(){

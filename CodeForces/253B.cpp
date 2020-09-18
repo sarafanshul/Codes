@@ -12,7 +12,7 @@
 #define double long double
 #define MP make_pair
 // #define int long long
-// #define MAX LONG_LONG_MAX
+#define MAX LONG_LONG_MAX
 // #define MIN LONG_LONG_MIN
 
 using namespace std;
@@ -35,16 +35,30 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 const size_t MAXN = 1e5 +7;
 
 void check(){
-	
+	ll n;
+	cin >> n;
+	vector<ll> a(n);
+	for(int i= 0; i < n ; i++) cin >> a[i];
+	ll ans = MAX ,pos;
+	sort(ALL(a));
+
+	for(int i = 0 ;i < n ;i++){
+		pos = a.end() - lower_bound(ALL(a) ,(2*a[i])+1);
+		ans = min(ans ,pos+i);
+	}
+	cout << ans;
 }
 
 int32_t main(){
-	#ifndef CUST_DEBUG
-	ios_base::sync_with_stdio(false); cin.tie(NULL);
-	#endif
+    freopen("input.txt","r",stdin);
+    freopen("output.txt","w",stdout);
+// 	#ifndef CUST_DEBUG
+// 	ios_base::sync_with_stdio(false); cin.tie(NULL);
+// 	#endif
 	// cin.exceptions(cin.Failbit);
 	int t = 1;	
 	// cin >> t;
+
 	for(int i = 1 ; i <= t ;i++){
 		// cout << "Case "<< i << ":\n";
 		check();

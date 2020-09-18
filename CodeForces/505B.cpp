@@ -32,10 +32,44 @@ template<typename A, typename B> ostream& operator<<(ostream &cout, pair<A, B> c
 template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<<"[";for(int i=0;i<v.size();i++){if(i)cout<<", ";cout<<v[i];}return cout<<"]";}
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 
-const size_t MAXN = 1e5 +7;
+const size_t MAXN = 1e2 +7;
+
+vector<pair<ll ,ll>> adj[MAXN];
+bool vis[MAXN];
+ll n ,m;
+
+bool dfs(ll v ,ll c ,ll dest){
+	vis[v] = 1;
+	if(v == dest) return 1;
+	for(pair<ll ,ll>& u : adj[v]){
+		if(u.S == c && !vis[u.F]){
+			if (dfs(u ,c ,dest)) return 1;
+		}
+	}
+	return 0;
+}
 
 void check(){
-	
+	cin >> n >> m;
+	ll v ,u ,c ,q;
+	for(int i = 0 ;i < m ;i++){
+		cin >> v >> u >> c;
+		v--;u--;
+		adj[v].PB(MP(u ,c));
+		adj[u].PB(MP(v ,c));
+	}
+	cin >> q;
+	while(q--){
+		ll res = 0;
+		cin >> v >> u;
+		v--;u--;
+		// check for all colors;
+		for(int i = 0 ;i < 100 ;i++){
+			memset(vis ,0 ,MAXN);
+			if(dfs(v ,i ,u)) ++res;
+		}
+		cout << res<<"\n";
+	}
 }
 
 int32_t main(){

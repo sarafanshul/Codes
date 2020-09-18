@@ -34,8 +34,62 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 
 const size_t MAXN = 1e5 +7;
 
+const int N = 50000;
+int cnt[27];
+string s; int n;
+int counter;
+
+bool valid(){return (counter == 26);}
+
+void fillall(){for(int i = 0; i < n; i++){if(s[i] == '?') s[i] = 'A';}}
+
 void check(){
-	
+	cin >> s;
+	n = s.length();
+	if(n < 26) {cout << -1; return;}
+	counter = 0;
+	for(int i = 0; i < 26; i++){
+		if(s[i] == '?'){
+			counter++; continue;
+		}
+		cnt[s[i]-'A']++;
+		if(cnt[s[i]-'A'] == 1) counter++;
+	}
+	if(valid()){
+		int cur = 0;
+		while(cnt[cur]>0) cur++;
+		for(int i = 0; i < 26; i++){
+			if(s[i] == '?'){
+				s[i] = cur + 'A';
+				cur++;
+				while(cnt[cur]>0) cur++;
+			}
+		}
+		fillall();
+		cout << s;
+		return;
+	}
+	for(int i = 26; i < n; i++){
+		if(s[i] != '?') {cnt[s[i]-'A']++; if(cnt[s[i]-'A']==1) counter++;}
+		if(s[i-26] != '?') {cnt[s[i-26]-'A']--; if(cnt[s[i-26]-'A']==0) counter--;}
+		if(s[i-26] == '?') counter--;
+		if(s[i] == '?') counter++;
+		if(valid()){
+			int cur = 0;
+			while(cnt[cur]>0) cur++;
+			for(int j = i - 25; j <= i; j++){
+				if(s[j] == '?'){
+					s[j] = cur + 'A';
+					cur++;
+					while(cnt[cur]>0) cur++;
+				}
+			}
+			fillall();
+			cout << s;
+			return;
+		}
+	}
+	cout << -1;
 }
 
 int32_t main(){

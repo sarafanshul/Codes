@@ -32,10 +32,32 @@ template<typename A, typename B> ostream& operator<<(ostream &cout, pair<A, B> c
 template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<<"[";for(int i=0;i<v.size();i++){if(i)cout<<", ";cout<<v[i];}return cout<<"]";}
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 
-const size_t MAXN = 1e5 +7;
+const size_t MAXN = 1e3 +7;
+
+vector<ll> adj[MAXN];
+ll n ,m;
+ll res = 1 ,vis[MAXN];
+
+void dfs(ll v ,bool pre){
+	vis[v] = 1 ;
+	if(pre)res *= 2;
+	for(ll u : adj[v]){
+		if(!vis[u]) dfs(u ,1);
+	}
+}
 
 void check(){
-	
+	cin >> n >> m;
+	ll v ,u;
+	for(int i= 0 ;i < m ; i++){
+		cin >> v >> u;v--,u--;
+		adj[v].PB(u);
+		adj[u].PB(v);
+	}
+	for(int i = 0; i < n ;i++){
+		if(!vis[i]) dfs(i ,0);
+	}
+	cout << res;
 }
 
 int32_t main(){
