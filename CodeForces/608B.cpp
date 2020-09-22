@@ -3,6 +3,7 @@
 #pragma comment(linker, "/stack:200000000")
 #pragma GCC optimize("unroll-loops")
 #include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
 #define ALL(x) x.begin(),x.end()
 #define PB push_back
 #define EB emplace_back
@@ -16,7 +17,7 @@
 // #define MIN LONG_LONG_MIN
 
 using namespace std;
-
+using namespace __gnu_pbds;
 #ifdef CUST_DEBUG // </COMMENT> the {ostream operator} modification(for redifination conflicts) after endif
 template<class K, class V>ostream& operator<<(ostream&s,const pair<K,V>&p){s<<'<'<<p.x<<','<<p.y<<'>';return s;}
 template<class K, class V>ostream& operator<<(ostream&s,const pair<K,V>&p){s<<'<'<<p.F<<','<<p.S<<'>';return s;}
@@ -32,10 +33,26 @@ template<typename A, typename B> ostream& operator<<(ostream &cout, pair<A, B> c
 template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<<"[";for(int i=0;i<v.size();i++){if(i)cout<<", ";cout<<v[i];}return cout<<"]";}
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 
-const long long MAXN = 1e5 +7;
+const size_t MAXN = 2*(1e5 +7);
 
 void check(){
-	
+    int F[MAXN][2];
+	string A ,B;
+	cin >> A >> B;
+    for (int i = 1; i <= B.size(); i++) {
+        for (int j = 0; j < 2; j++) {
+            F[i][j] = F[i - 1][j];
+        }
+        ++F[i][B[i - 1] - '0'];
+    }
+    ll res = 0;
+    for (int i = 0, c; i < A.size(); i++) {
+        c = A[i]-'0';
+        for (int j = 0; j < 2; j++) {
+            res += abs(c - j) * (F[B.size() - A.size() + i + 1][j] - F[i][j]);
+        }
+    }
+    cout << res;
 }
 
 int32_t main(){

@@ -32,10 +32,25 @@ template<typename A, typename B> ostream& operator<<(ostream &cout, pair<A, B> c
 template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<<"[";for(int i=0;i<v.size();i++){if(i)cout<<", ";cout<<v[i];}return cout<<"]";}
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 
-const long long MAXN = 1e5 +7;
+const size_t MAXN = 1e6 +7;
+
+vector<long long> v;
+void brute(long long num){
+	v.push_back(num);
+	if (num > 1000000000)
+		return;
+	brute(num * 10 + 4);
+	brute(num * 10 + 7);
+}
 
 void check(){
-	
+	v.reserve(MAXN);
+	ll n;
+	brute(0);
+	sort(ALL(v));
+	v.resize(unique(ALL(v)) - v.begin());
+	cin >> n;
+	cout << lower_bound(ALL(v) ,n) - v.begin();	
 }
 
 int32_t main(){

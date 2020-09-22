@@ -1,3 +1,8 @@
+// The main observation is that you should print "YES" if the graph is a set of disjoint cliques 
+// 		(in each connected non-clique there is a triple of vertices X,Y,Z that X-Y and Y-Z but not X-Z). 
+// To check if each connected component is a clique, you can run dfs and count vertices and edges in the connected component — 
+// 		it's a clique if and only if edges = (vertices)*(vertices-1)/2.
+
 #pragma GCC optimize("Ofast")  
 #pragma GCC target("avx,avx2,fma") 
 #pragma comment(linker, "/stack:200000000")
@@ -32,10 +37,35 @@ template<typename A, typename B> ostream& operator<<(ostream &cout, pair<A, B> c
 template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<<"[";for(int i=0;i<v.size();i++){if(i)cout<<", ";cout<<v[i];}return cout<<"]";}
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 
-const long long MAXN = 1e5 +7;
+const size_t MAXN = 2*(1e5 +7);
+vector<ll> adj[MAXN];
+ll n ,m ,ver ,edg;
+bool vis[MAXN] = {0};
+
+void dfs(int v){
+	vis[v] = 1;
+	ver++ ,edg+= adj[v].size();
+	for(int u : adj[v]){
+		if(!vis[u]) dfs(u);
+	}
+}
 
 void check(){
-	
+	ll v ,u;
+	cin >> n >> m;
+	for(int i = 0;i < m; i++){
+		cin >> v >> u;
+		adj[v].PB(u);
+		adj[u].PB(v);
+	}
+	for(int i = 1; i <= n ;i++){
+		if(!vis[i]){
+			ver = 0 ,edg = 0;
+			dfs(i);
+			if(edg != ver * (ver - 1)) {cout << "NO";return;}
+		}
+	}
+	cout <<"YES";
 }
 
 int32_t main(){
