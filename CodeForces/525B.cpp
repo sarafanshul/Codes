@@ -1,3 +1,5 @@
+// The idea is to determine the last exchange of each symmetrical position. For example, in the third example, the first exchange will affect the second, third, and the second exchange will affect the third. Then the third time was replaced three times in total, which was an odd number, so the exchange, the second time was exchanged a total of two times, is an even number, so did not change. The first time is an odd number, you have to change
+
 #pragma GCC optimize("Ofast")  
 #pragma GCC target("avx,avx2,fma") 
 #pragma comment(linker, "/stack:200000000")
@@ -37,19 +39,20 @@ const long long MAXN = 1e5 +7;
 void check(){
 	string s;
 	cin >> s;
-	ll k;
-	cin >> k;
-	ll n = s.size() ,i;
-	for(i = 0 ;i < n ;i++){
-		ll r = s[i] ,idx = -1;
-		for(int j = i+1 ; j < n ;j++){
-			if(r < s[j] && k >= (j-i)) r = s[j] ,idx = j;
-		}
-		if(idx == -1) continue;
-		for(int j = idx; j >i ;j--) swap(s[j] ,s[j-1]);
-		k -= (idx - i);
-	}	
-	cout << s;
+	ll m ,n = s.size() ,pos;
+	cin >> m;
+	vector<ll> a(n+1);
+	while(m--){
+		cin >> pos;
+		a[pos-1]++;
+	}
+	for(int i = 1 ;i < n ;i++){
+		a[i] = a[i] + a[i-1];
+	}
+	for(int i = 0 ;i < n/2 ;i++){
+		if(a[i]%2 == 1) swap(s[i] ,s[n-i-1]);
+	}
+	cout <<s;
 }
 
 int32_t main(){

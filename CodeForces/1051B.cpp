@@ -35,21 +35,13 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 const long long MAXN = 1e5 +7;
 
 void check(){
-	string s;
-	cin >> s;
-	ll k;
-	cin >> k;
-	ll n = s.size() ,i;
-	for(i = 0 ;i < n ;i++){
-		ll r = s[i] ,idx = -1;
-		for(int j = i+1 ; j < n ;j++){
-			if(r < s[j] && k >= (j-i)) r = s[j] ,idx = j;
-		}
-		if(idx == -1) continue;
-		for(int j = idx; j >i ;j--) swap(s[j] ,s[j-1]);
-		k -= (idx - i);
-	}	
-	cout << s;
+	ll l ,r;
+	cin >> l >> r;
+	cout << "YES\n";
+	while(r >= l) {
+		cout << r-- << " "<<r<<"\n";
+		r--;
+	}
 }
 
 int32_t main(){

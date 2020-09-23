@@ -35,21 +35,32 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 const long long MAXN = 1e5 +7;
 
 void check(){
-	string s;
-	cin >> s;
-	ll k;
-	cin >> k;
-	ll n = s.size() ,i;
-	for(i = 0 ;i < n ;i++){
-		ll r = s[i] ,idx = -1;
-		for(int j = i+1 ; j < n ;j++){
-			if(r < s[j] && k >= (j-i)) r = s[j] ,idx = j;
+	ll n ,r ,avg ,ai ,bi ,tot = 0 ,curr;
+	cin >> n >> r >> avg;
+	vector<pair<ll ,ll>> a(n);
+	for(int i = 0;i < n; i++){
+		cin >> ai >> bi;
+		a[i] = MP(bi ,r - ai);
+		tot += ai;
+	}
+	curr = n*avg; // min avg
+	if(tot >= curr){cout <<"0";return;}
+
+	sort(ALL(a));
+	tot = curr - tot;
+	ll ans = 0;
+	for(pair<ll ,ll>& pi : a){
+		ai = pi.S;
+		bi = pi.F;
+		if(tot >= ai){
+			tot -= ai;
+			ans += ai*bi;
+		}else {
+			ans += tot*bi;
+			break;
 		}
-		if(idx == -1) continue;
-		for(int j = idx; j >i ;j--) swap(s[j] ,s[j-1]);
-		k -= (idx - i);
-	}	
-	cout << s;
+	}
+	cout << ans;
 }
 
 int32_t main(){
