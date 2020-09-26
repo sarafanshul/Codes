@@ -1,11 +1,13 @@
+// Since we are looking for factors that do not contain perfect squares, and we should try to take the largest one, we can know by observing the factorization of n
+// n = a1 x a2
+// If there is a square number m such that m x m is a factor of n, it can definitely be written as
+// n = a3 x m x a4 x m?
+// where a3 x m = a1 and a4 x m = a2.
 
 #pragma GCC optimize("Ofast")  // remove in mingw32 bit ;
 #pragma GCC target("avx,avx2,fma") 
 #pragma comment(linker, "/stack:200000000")
 #pragma GCC optimize("unroll-loops")
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-#include <ext/pb_ds/detail/standard_policies.hpp>
 #include <bits/stdc++.h>
 #define ALL(x) x.begin(),x.end()
 #define PB push_back
@@ -19,7 +21,6 @@
 // #define MAX LONG_LONG_MAX
 // #define MIN LONG_LONG_MIN
 
-using namespace __gnu_pbds;
 using namespace std;
 
 #ifdef CUST_DEBUG // </COMMENT> the {ostream operator} modification(for redifination conflicts) after endif
@@ -37,18 +38,15 @@ template<typename A, typename B> ostream& operator<<(ostream &cout, pair<A, B> c
 template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<<"[";for(int i=0;i<v.size();i++){if(i)cout<<", ";cout<<v[i];}return cout<<"]";}
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 
-typedef tree<
-	long long, // Key type
-	null_type, // Mapped-policy
-	less<long long>, // Key comparison functor
-	rb_tree_tag, // Specifies which underlying data structure to use
-	tree_order_statistics_node_update> // A policy for updating node invariants
-ordered_set;
-
 const long long MAXN = 1e5 +7;
 
 void check(){
-	
+	ll n ,i;
+	cin >> n;
+	for(i = 2 ;i*i <= n ;i++){
+		while(n%(i*i) == 0) n /= i;
+	}
+	cout << n;
 }
 
 int32_t main(){

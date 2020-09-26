@@ -1,11 +1,7 @@
-
-#pragma GCC optimize("Ofast")  // remove in mingw32 bit ;
+#pragma GCC optimize("Ofast")
 #pragma GCC target("avx,avx2,fma") 
 #pragma comment(linker, "/stack:200000000")
 #pragma GCC optimize("unroll-loops")
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-#include <ext/pb_ds/detail/standard_policies.hpp>
 #include <bits/stdc++.h>
 #define ALL(x) x.begin(),x.end()
 #define PB push_back
@@ -19,7 +15,6 @@
 // #define MAX LONG_LONG_MAX
 // #define MIN LONG_LONG_MIN
 
-using namespace __gnu_pbds;
 using namespace std;
 
 #ifdef CUST_DEBUG // </COMMENT> the {ostream operator} modification(for redifination conflicts) after endif
@@ -37,18 +32,23 @@ template<typename A, typename B> ostream& operator<<(ostream &cout, pair<A, B> c
 template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<<"[";for(int i=0;i<v.size();i++){if(i)cout<<", ";cout<<v[i];}return cout<<"]";}
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 
-typedef tree<
-	long long, // Key type
-	null_type, // Mapped-policy
-	less<long long>, // Key comparison functor
-	rb_tree_tag, // Specifies which underlying data structure to use
-	tree_order_statistics_node_update> // A policy for updating node invariants
-ordered_set;
-
 const long long MAXN = 1e5 +7;
 
+ll decom(vector<ll>& p ,ll x){
+	while(x%2 == 0){p[2]++,x/=2;}
+	while(x%3 == 0){p[3]++,x/=3;}
+	while(x%5 == 0){p[5]++,x/=5;}
+	return x;
+}
+
 void check(){
-	
+	ll a ,b;
+	cin >> a >> b;
+	vector<ll> ap(10) ,bp(10);
+	ll X = decom(ap ,a);
+	ll Y = decom(bp ,b);
+	if(X != Y){cout <<-1;return;}
+	cout << abs(ap[2] - bp[2]) + abs(ap[3]-bp[3]) + abs(ap[5]-bp[5]);
 }
 
 int32_t main(){

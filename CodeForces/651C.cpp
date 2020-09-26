@@ -1,5 +1,5 @@
 
-#pragma GCC optimize("Ofast")  // remove in mingw32 bit ;
+#pragma GCC optimize("Ofast")  
 #pragma GCC target("avx,avx2,fma") 
 #pragma comment(linker, "/stack:200000000")
 #pragma GCC optimize("unroll-loops")
@@ -47,9 +47,62 @@ ordered_set;
 
 const long long MAXN = 1e5 +7;
 
+struct custom_hash_ll {
+    static uint64_t splitmix64(uint64_t x) {
+        x += 0x9e3779b97f4a7c15;
+        x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+        x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+        return x ^ (x >> 31);
+    }
+
+    size_t operator()(uint64_t x) const {
+        static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+        return splitmix64(x + FIXED_RANDOM);
+    }
+};
+
+struct custom_hash_pi {
+    static uint64_t splitmix64(uint64_t x) {
+        // http://xorshift.di.unimi.it/splitmix64.c
+        x += 0x9e3779b97f4a7c15;
+        x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+        x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+        return x ^ (x >> 31);
+    }
+
+    size_t operator()(pair<uint64_t,uint64_t> x) const {
+        static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+        return splitmix64(x.first + FIXED_RANDOM)^(splitmix64(x.second + FIXED_RANDOM) >> 1);
+    }
+};
+
+gp_hash_table<pair<long long, long long>, long long ,custom_hash_pi> same; 
+gp_hash_table<long long, long long ,custom_hash_ll> _X ,_Y;
+
 void check(){
-	
+	ll n ,x ,y ,ans = 0;
+	cin >> n;
+	for(int i = 0;i < n; i++){
+		cin >> x >> y;
+		_X[x]++;
+		_Y[y]++;
+		same[MP(x ,y)]++;
+	}
+	for(auto it = _X.begin() ;it != _X.end() ;it++){
+		x = it->second;
+		ans += x*(x-1);
+	}
+	for(auto it = _Y.begin() ;it != _Y.end() ;it++){
+		y = it->second;
+		ans += y*(y-1);
+	}
+	for(auto it = same.begin() ;it != same.end() ;it++){
+		ll t = it->second;
+		ans -= t*(t-1);
+	}
+	cout << ans/2;
 }
+
 
 int32_t main(){
 	#ifndef CUST_DEBUG
