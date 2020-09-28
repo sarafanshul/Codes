@@ -35,22 +35,21 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 const long long MAXN = 1e5 +7;
 
 void check(){
-	ll n ,T;
-	cin >> n >> T;
-	vector<ll> a(n) ,b(n ,0);
-	bool f = 0;
-	for(int i = 0; i < n ; i++){
-		cin >> a[i];
-		if(2*a[i] < T) b[i] = 0;
-		else if (2*a[i] > T) b[i] = 1;
-		else {
-		    if(f) b[i] = 1;
-		    else b[i] = 0;
-		    f ^= 1;
+	ll n ,ans = 0 ,a;
+	cin >> n;
+	set<ll> pref;
+	ll curr_pref = 0;
+	pref.insert(curr_pref);
+	while(n--){
+		cin >> a;
+		if(pref.count(curr_pref + a)){
+			ans++;
+			pref = set<ll>({curr_pref});
 		}
-		cout << b[i] << " ";
+		curr_pref += a;
+		pref.insert(curr_pref);
 	}
-	cout<<"\n";
+	cout << ans ;
 }
 
 int32_t main(){
@@ -59,7 +58,7 @@ int32_t main(){
 	#endif
 	// cin.exceptions(cin.Failbit);
 	int t = 1;	
-	cin >> t;
+	// cin >> t;
 	for(int i = 1 ; i <= t ;i++){
 		// cout << "Case "<< i << ":\n";
 		check();

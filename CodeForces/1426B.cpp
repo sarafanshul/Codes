@@ -35,22 +35,17 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 const long long MAXN = 1e5 +7;
 
 void check(){
-	ll n ,T;
-	cin >> n >> T;
-	vector<ll> a(n) ,b(n ,0);
-	bool f = 0;
-	for(int i = 0; i < n ; i++){
-		cin >> a[i];
-		if(2*a[i] < T) b[i] = 0;
-		else if (2*a[i] > T) b[i] = 1;
-		else {
-		    if(f) b[i] = 1;
-		    else b[i] = 0;
-		    f ^= 1;
-		}
-		cout << b[i] << " ";
+	ll n ,m ;
+	cin >> n >> m;
+	bool ans = ((m) % 2 == 0);
+	vector<ll> a(4);
+	bool ld = 0,rd  = 0;
+	for(int i = 0 ;i < n ; i++){
+		for(int j = 0 ; j < 4 ;j++) cin >> a[j];
+		if(a[1] == a[2]) ld = 1;
+		if(a[0] == a[3]) rd = 1;
 	}
-	cout<<"\n";
+	cout << ((ans && ld) ? "YES\n": "NO\n");
 }
 
 int32_t main(){

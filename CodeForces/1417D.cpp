@@ -1,3 +1,5 @@
+// https://youtu.be/Rms7sCV-VJk?t=1456
+
 #pragma GCC optimize("Ofast")  // remove in mingw32 bit ;
 #pragma GCC target("avx,avx2,fma") 
 #pragma comment(linker, "/stack:200000000")
@@ -34,23 +36,29 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 
 const long long MAXN = 1e5 +7;
 
+
 void check(){
-	ll n ,T;
-	cin >> n >> T;
-	vector<ll> a(n) ,b(n ,0);
-	bool f = 0;
-	for(int i = 0; i < n ; i++){
-		cin >> a[i];
-		if(2*a[i] < T) b[i] = 0;
-		else if (2*a[i] > T) b[i] = 1;
-		else {
-		    if(f) b[i] = 1;
-		    else b[i] = 0;
-		    f ^= 1;
-		}
-		cout << b[i] << " ";
+	ll n ,sm = 0;
+	cin >> n;
+	vector<ll> a(n+1);
+	for(int i = 1; i <= n; i++) cin >> a[i] ,sm += a[i];
+	if(sm % n) {cout << "-1\n";return;}
+	vector<vector<ll>> ans;
+	auto go = [&](ll x ,ll y ,ll z){
+		a[x] -= x*z;
+		a[y] += x*z;
+		ans.PB({x ,y ,z});
+	};
+
+	for(int i = 2 ; i <= n; i++){
+		if(a[i] % i) go(1 ,i ,i - a[i]%i);
+		go(i ,1 ,a[i]/i);
 	}
-	cout<<"\n";
+	for(int i = 1 ;i <= n ;i++){
+		go(1 ,i ,sm/n);
+	}
+	cout << ans.size() << "\n";
+	for(vector<ll>& b : ans) cout << b[0] << " "<<b[1] << " "<<b[2] <<"\n";
 }
 
 int32_t main(){

@@ -35,22 +35,24 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 const long long MAXN = 1e5 +7;
 
 void check(){
-	ll n ,T;
-	cin >> n >> T;
-	vector<ll> a(n) ,b(n ,0);
-	bool f = 0;
-	for(int i = 0; i < n ; i++){
-		cin >> a[i];
-		if(2*a[i] < T) b[i] = 0;
-		else if (2*a[i] > T) b[i] = 1;
+	ll a ,b ,n;
+	cin >> a >> b;
+	ll ac = 0 ,bc = 0 ,t = 0 ,i = 1 ,j = 1;
+	while(t != a*b){
+		t = min(a*i ,b*j);
+// 		cout << MP(a*i ,b*j);
+		if(t == a*i && t != b*j) ac++ ,i++;
+		else if(t == b*j && t != a*i) bc++ ,j++;
 		else {
-		    if(f) b[i] = 1;
-		    else b[i] = 0;
-		    f ^= 1;
+			if(b > a)bc++;
+			else ac++;
+			i++ ,j++;
 		}
-		cout << b[i] << " ";
+// 		cout << MP(ac ,bc) << ":" << t <<'\n';
 	}
-	cout<<"\n";
+	if(ac > bc) cout << "Dasha";
+	else if(bc > ac) cout << "Masha";
+	else cout << "Equal";
 }
 
 int32_t main(){
@@ -59,7 +61,7 @@ int32_t main(){
 	#endif
 	// cin.exceptions(cin.Failbit);
 	int t = 1;	
-	cin >> t;
+	// cin >> t;
 	for(int i = 1 ; i <= t ;i++){
 		// cout << "Case "<< i << ":\n";
 		check();

@@ -1,3 +1,9 @@
+
+//  greatest distance between two indices of a same number 
+//  max (i1-i) from 0 ,i ,i1 ,i2 ,n+1
+//  than min cumilative for result
+// https://youtu.be/Rms7sCV-VJk?t=903
+
 #pragma GCC optimize("Ofast")  // remove in mingw32 bit ;
 #pragma GCC target("avx,avx2,fma") 
 #pragma comment(linker, "/stack:200000000")
@@ -35,22 +41,34 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 const long long MAXN = 1e5 +7;
 
 void check(){
-	ll n ,T;
-	cin >> n >> T;
-	vector<ll> a(n) ,b(n ,0);
-	bool f = 0;
-	for(int i = 0; i < n ; i++){
+	ll n;
+	cin >> n;
+	vector<ll> a(n+1);
+	vector<vector<ll>> where(n+1 ,vector<ll>(0));
+	vector<bool> vis(n+1 ,0);
+	for(int i = 1 ;i <= n ; i++){
 		cin >> a[i];
-		if(2*a[i] < T) b[i] = 0;
-		else if (2*a[i] > T) b[i] = 1;
-		else {
-		    if(f) b[i] = 1;
-		    else b[i] = 0;
-		    f ^= 1;
-		}
-		cout << b[i] << " ";
+		where[a[i]].PB(i);
 	}
-	cout<<"\n";
+	vector<ll> maxv(n+1 ,2*n) ,ret(n+1, -1);
+	for(int i = 1; i <= n ;i++){
+	    if(vis[a[i]]) continue;
+	    vis[a[i]] = 1;
+		where[a[i]].PB(n+1);
+		ll mxd = where[a[i]][0] - 0;
+		for(int j = 1 ; j < where[a[i]].size() ;j++){
+			mxd = max(mxd ,where[a[i]][j] - where[a[i]][j-1]);
+		}
+		maxv[mxd] = min(maxv[mxd] ,a[i]);
+	}
+	for(int i = 1; i <= n ; i++){
+	    maxv[i] = min(maxv[i] ,maxv[i-1]);
+	}
+	for(int i = 1 ;i <= n ;i++){
+	    if(maxv[i] == 2*n) cout <<"-1 ";
+	    else cout << maxv[i] << " ";
+	}
+	cout << "\n";
 }
 
 int32_t main(){

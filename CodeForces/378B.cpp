@@ -35,22 +35,22 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 const long long MAXN = 1e5 +7;
 
 void check(){
-	ll n ,T;
-	cin >> n >> T;
-	vector<ll> a(n) ,b(n ,0);
-	bool f = 0;
-	for(int i = 0; i < n ; i++){
-		cin >> a[i];
-		if(2*a[i] < T) b[i] = 0;
-		else if (2*a[i] > T) b[i] = 1;
-		else {
-		    if(f) b[i] = 1;
-		    else b[i] = 0;
-		    f ^= 1;
-		}
-		cout << b[i] << " ";
-	}
-	cout<<"\n";
+	ll n;
+	cin >> n;
+	ll fi[n] ,se[n] ,idx_a = 0 ,idx_b = 0;
+	for(int i = 0 ;i < n ;i++){
+		cin >> fi[i] >> se[i];
+		if(fi[idx_a] < se[idx_b]) idx_a++;
+		else if(fi[idx_a] > se[idx_b]) idx_b++;
+	}	
+	if(idx_a < n/2) idx_a = n/2;
+	else if (idx_b < n/2) idx_b = n/2;
+
+	for(int k = 0; k < idx_a; k++) cout << "1";
+    for(int k = idx_a; k < n; k++) cout << "0";
+    cout << "\n";
+    for(int k = 0; k < idx_b; k++) cout << "1";
+    for(int k = idx_b; k < n; k++) cout << "0";
 }
 
 int32_t main(){
@@ -59,7 +59,7 @@ int32_t main(){
 	#endif
 	// cin.exceptions(cin.Failbit);
 	int t = 1;	
-	cin >> t;
+	// cin >> t;
 	for(int i = 1 ; i <= t ;i++){
 		// cout << "Case "<< i << ":\n";
 		check();

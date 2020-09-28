@@ -34,23 +34,24 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 
 const long long MAXN = 1e5 +7;
 
-void check(){
-	ll n ,T;
-	cin >> n >> T;
-	vector<ll> a(n) ,b(n ,0);
-	bool f = 0;
-	for(int i = 0; i < n ; i++){
-		cin >> a[i];
-		if(2*a[i] < T) b[i] = 0;
-		else if (2*a[i] > T) b[i] = 1;
-		else {
-		    if(f) b[i] = 1;
-		    else b[i] = 0;
-		    f ^= 1;
-		}
-		cout << b[i] << " ";
+template<typename T = ll>
+T nCr (T n ,T r){
+	ll res = 1;
+	for(int i = 0; i < r ;i++){
+		res *= (n-i);
+		res /= (i+1);
 	}
-	cout<<"\n";
+	return res;
+}
+
+void check(){
+	ll n ,m ,t;
+	cin >> n >> m >> t;
+	ll tot = 0;
+	for(ll i = 4 ;i <= t-1 ; i++){
+		tot += nCr(n ,i) * nCr(m ,t-i);
+	}
+	cout << tot;
 }
 
 int32_t main(){
@@ -59,7 +60,7 @@ int32_t main(){
 	#endif
 	// cin.exceptions(cin.Failbit);
 	int t = 1;	
-	cin >> t;
+	// cin >> t;
 	for(int i = 1 ; i <= t ;i++){
 		// cout << "Case "<< i << ":\n";
 		check();

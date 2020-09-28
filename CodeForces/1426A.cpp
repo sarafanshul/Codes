@@ -4,6 +4,12 @@
 #pragma GCC optimize("unroll-loops")
 #include <bits/stdc++.h>
 #define ALL(x) x.begin(),x.end()
+#pragma GCC optimize("Ofast")  // remove in mingw32 bit ;
+#pragma GCC target("avx,avx2,fma") 
+#pragma comment(linker, "/stack:200000000")
+#pragma GCC optimize("unroll-loops")
+#include <bits/stdc++.h>
+#define ALL(x) x.begin(),x.end()
 #define PB push_back
 #define EB emplace_back
 #define F first
@@ -35,22 +41,13 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 const long long MAXN = 1e5 +7;
 
 void check(){
-	ll n ,T;
-	cin >> n >> T;
-	vector<ll> a(n) ,b(n ,0);
-	bool f = 0;
-	for(int i = 0; i < n ; i++){
-		cin >> a[i];
-		if(2*a[i] < T) b[i] = 0;
-		else if (2*a[i] > T) b[i] = 1;
-		else {
-		    if(f) b[i] = 1;
-		    else b[i] = 0;
-		    f ^= 1;
-		}
-		cout << b[i] << " ";
-	}
-	cout<<"\n";
+	ll n ,x;
+	cin >> n >> x;
+	if (n <= 2) {cout << "1\n";return;}
+	n -= 2;
+	ll ans = 1;
+	ans += ceil((double)n/(double)x);
+	cout << ans<<"\n";
 }
 
 int32_t main(){

@@ -35,22 +35,18 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 const long long MAXN = 1e5 +7;
 
 void check(){
-	ll n ,T;
-	cin >> n >> T;
-	vector<ll> a(n) ,b(n ,0);
-	bool f = 0;
-	for(int i = 0; i < n ; i++){
-		cin >> a[i];
-		if(2*a[i] < T) b[i] = 0;
-		else if (2*a[i] > T) b[i] = 1;
-		else {
-		    if(f) b[i] = 1;
-		    else b[i] = 0;
-		    f ^= 1;
-		}
-		cout << b[i] << " ";
-	}
-	cout<<"\n";
+	ll n;
+	cin >> n;
+	ll ar ,as ,ap ,br ,bs ,bp;
+	cin >> ar >> as >> ap >> br >> bs >> bp;
+	// R S P, so 0 beats 1 beats 2 beats 0
+ 
+	// A wins as many as few as possible
+	// N - max flow along non-winning edges
+	cout << max({ar+bs, as+bp, ap+br, n}) - n << " ";
+	
+	// max-flow along winning edges
+    cout << min(ar,bs) + min(as,bp) + min(ap,br);
 }
 
 int32_t main(){
@@ -59,7 +55,7 @@ int32_t main(){
 	#endif
 	// cin.exceptions(cin.Failbit);
 	int t = 1;	
-	cin >> t;
+	// cin >> t;
 	for(int i = 1 ; i <= t ;i++){
 		// cout << "Case "<< i << ":\n";
 		check();

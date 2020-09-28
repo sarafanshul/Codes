@@ -33,26 +33,17 @@ template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 
 const long long MAXN = 1e5 +7;
-
+ll n;
 void check(){
-	ll n ,T;
-	cin >> n >> T;
-	vector<ll> a(n) ,b(n ,0);
-	bool f = 0;
-	for(int i = 0; i < n ; i++){
-		cin >> a[i];
-		if(2*a[i] < T) b[i] = 0;
-		else if (2*a[i] > T) b[i] = 1;
-		else {
-		    if(f) b[i] = 1;
-		    else b[i] = 0;
-		    f ^= 1;
-		}
-		cout << b[i] << " ";
+	cin >> n;
+	ll ans = LONG_LONG_MAX ,t = sqrt(n) ,i = 1;
+	while(t--){
+	    ans = min((ll)ceil((double)n/(double)i) + i ,ans);
+	    i++;
 	}
-	cout<<"\n";
+	cout << ans-2<<'\n';
 }
-
+	
 int32_t main(){
 	#ifndef CUST_DEBUG
 	ios_base::sync_with_stdio(false); cin.tie(NULL);
