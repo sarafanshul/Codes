@@ -1,28 +1,9 @@
-//https://codeforces.com/blog/entry/77480
-#pragma GCC optimize("Ofast")  // Compiler Optimizations // FOR 64-bit compilers
+#pragma GCC optimize("Ofast")  // remove in mingw32 bit ;
 #pragma GCC target("avx,avx2,fma") 
 #pragma comment(linker, "/stack:200000000")
 #pragma GCC optimize("unroll-loops")
-#include <string> // optimizations for 64 bit bitsets
-#include <bits/functexcept.h>
-#include <iosfwd>
-#include <bits/cxxabi_forced.h>
-#include <bits/functional_hash.h>
-#pragma push_macro("__SIZEOF_LONG__")
-#pragma push_macro("__cplusplus")
-#define __SIZEOF_LONG__ __SIZEOF_LONG_LONG__
-#define unsigned unsigned long
-#define __cplusplus 201102L
-#define __builtin_popcountl __builtin_popcountll
-#define __builtin_ctzl __builtin_ctzll
-#include <bitset>
-#pragma pop_macro("__cplusplus")
-#pragma pop_macro("__SIZEOF_LONG__")
-#undef unsigned
-#undef __builtin_popcountl
-#undef __builtin_ctzl
 #include <bits/stdc++.h>
-#define ALL(x) x.begin(),x.end() // custom alias
+#define ALL(x) x.begin(),x.end()
 #define PB push_back
 #define EB emplace_back
 #define F first
@@ -33,7 +14,9 @@
 // #define int long long
 // #define MAX LONG_LONG_MAX
 // #define MIN LONG_LONG_MIN
+
 using namespace std;
+
 
 #ifdef CUST_DEBUG
 template<class K, class V>ostream& operator<<(ostream&s,const pair<K,V>&p){s<<'<'<<p.F<<','<<p.S<<'>';return s;}
@@ -49,12 +32,55 @@ template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 #endif
 
-const long long MAXN = 1e5 +7;
-void check(){
-	
+const long long MAXN = 507;
+const int dx[8] = {1, 0, -1, 0, 1, 1, -1, -1}, dy[8] = {0, 1, 0, -1, -1, 1, -1, 1};
+ll adj[MAXN][MAXN] = {0} ,vis[MAXN][MAXN] = {0};
+ll n ,m ,k ,cnt;
+
+bool can(ll x ,ll y){
+    if(x >= n || x < 0 || y < 0 || y >= m) return 0;
+    if(vis[x][y] || adj[x][y] != 1) return 0;
+    return 1;
 }
 
-signed main(){
+void dfs(ll li ,ll lj ,ll tl){
+    // cout << MP(tl ,MP(li ,lj));
+	vis[li][lj] = 1;
+
+	ll x ,y;
+//	if(tl == cnt-k)return 1;
+	for(int i = 0 ;i < 4; i++){
+	    x = li + dx[i]; y = lj + dy[i];
+        if(can(x ,y)){dfs(x ,y ,tl+1);}
+	}
+	if(k){
+		--k;
+		vis[li][lj] = 2;
+	}
+}
+
+void check(){
+	ll li ,lj;
+	cin >> n >> m >> k;
+	string s;
+	for(int i = 0 ;i < n ;i++){
+		cin >> s;
+		for(int j = 0 ;j < m;j++){
+			if(s[j] == '.') adj[i][j] = 1 ,cnt++ ,li = i ,lj = j;
+		}
+	}
+// 	cout << MP(li ,lj);
+	dfs(li ,lj ,1LL);
+// 	cout << cnt - k;
+	for(int i = 0; i < n ;i++){
+		for(int j = 0; j < m ;j++){
+			if(vis[i][j] == 2) cout <<"X";
+			else cout << (adj[i][j] == 1 ? '.':'#');
+		}cout <<"\n";
+	}
+}
+
+int32_t main(){
 	#ifndef CUST_DEBUG
 	ios_base::sync_with_stdio(false); cin.tie(NULL);
 	#endif
