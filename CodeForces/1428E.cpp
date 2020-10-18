@@ -35,46 +35,36 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 const long long MAXN = 1e5 +7;
 
 void check(){
-	ll n;
-	cin >> n;
-	ll a[n];
-	for(ll i = 0 ;i <  n;i++) cin>>a[i];
-	vector<ll> where[4];
-	vector<pair<ll ,ll>> targets;
-	vector<ll> on_row(n ,-1);
-	ll empty_row = 0;
+	ll n ,k;
+	cin >> n >> k;
+	vector<ll> a(n);
+	for(ll i= 0 ; i < n ;i++ )cin >> a[i];
+	sort(ALL(a));
 
-	for(ll i = n-1 ;i>= 0 ;i--){
-		if(a[i] == 1){
-			on_row[i] = empty_row++;
-			targets.PB(MP(on_row[i] ,i));
-		} else if(a[i] == 2){
-			if(where[1].empty()){cout << -1 ;return;}
-			ll one = where[1].back();
-			where[1].pop_back();
-			on_row[i] = on_row[one];
-			targets.PB(MP(on_row[i] ,i));
-		} else if(a[i] == 3){
-			bool f = 0;
-			for(ll x = 3;x >= 1 ;x--){
-				if(!where[x].empty()){
-					ll who = where[x].back();
-					where[x].pop_back();
-					on_row[i] = empty_row++;
-					targets.PB(MP(on_row[i] ,i));
-					targets.PB(MP(on_row[i] ,who));
-					f = 1;
-					break;
-				}
-			}
-			if(!f){cout <<-1 ;return;}
-		}
-		where[a[i]].PB(i);
+	ll total = 0;
+	for(ll &i : a)total += i*i;
+
+	priority_queue<pair<ll ,ll>> pq;
+	vector<ll> counter(n ,1);
+	
+	auto get_cost = [](ll x ,ll k){
+		ll mod = x % k;
+		ll above = mod ,below = k - above;
+		return below * (x/k) * (x/k) + above * (x/k+1) * (x/k+1);
+	};
+
+	for(ll i = 0 ;i < n ;i++){
+		pq.emplace(get_cost(a[i] ,1) - get_cost(a[i] ,2) ,i);
 	}
-	cout<< targets.size() <<"\n";
-	for(pair<ll ,ll> &pi: targets){
-		cout << n-(pi.F) << " " << pi.S+1 <<"\n";
+
+	for(ll iter = 0 ;iter < k - n; iter++){
+		auto top = pq.top(); pq.pop();
+		total -= top.F;
+		ll idx = top.S;
+		counter[idx]++;
+		pq.emplace(get_cost(a[idx] ,counter[idx]) - get_cost(a[idx] ,counter[idx]+ 1) ,idx);
 	}
+	cout << total;
 }
 
 int32_t main(){

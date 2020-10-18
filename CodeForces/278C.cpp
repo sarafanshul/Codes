@@ -32,10 +32,39 @@ template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 #endif
 
-const long long MAXN = 1e5 +7;
+const long long MAXN = 1e3 +7;
+ll n ,m;
+vector<ll> adj[MAXN*2];
+bool vis[MAXN*2] = {0};
+
+void dfs(ll v){
+	vis[v] = 1;
+	for(ll &u : adj[v]){
+		if(!vis[u]) dfs(u);
+	}
+}
 
 void check(){
-
+	cin >> n>> m;
+	ll u ,v ,x ,y ,sm = 0;
+	for(ll i = 1 ; i <= n ;i++){
+		cin >> x;sm+= x;
+		for(ll j = 1 ;j <= x ;j++){
+			cin >> v;
+			v += MAXN;
+			adj[i].PB(v);
+			adj[v].PB(i);
+		}
+	}
+	ll ans = -1;
+	if(!sm) ans++;
+	for(ll i = 1 ;i <= n;i++){
+		if(!vis[i]){
+			dfs(i);
+			ans++;
+		}
+	}
+	cout << ans;
 }
 
 int32_t main(){
