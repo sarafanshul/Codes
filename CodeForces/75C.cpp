@@ -32,40 +32,35 @@ template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 #endif
 
-const long long MAXN = 71;
-ll n ,m ,k ,dp[MAXN][MAXN][MAXN][MAXN] ,mat[MAXN][MAXN];
+const long long MAXN = 1e5 +7;
 
-ll go(ll i ,ll j ,ll cnt ,ll rem){
-	
-	if(i == n){
-		return rem == 0 ? 0 : LONG_LONG_MIN;
-	}
-	if(j == m || cnt == m / 2){
-		return dp[i][j][cnt][rem] = go(i+1 ,0 ,0 ,rem);
-	}
-	if(dp[i][j][cnt][rem] != -1){
-		return dp[i][j][cnt][rem];
-	}
-	ll res = 0 ,add = ( ( rem - (mat[i][j] % k)) + k) % k;
-
-	if(cnt < m/2 ){
-		res = max(go(i ,j+1 ,cnt ,rem) ,
-				mat[i][j] + go(i ,j+1 ,cnt+1 ,add) );
-	}
-	return dp[i][j][cnt][rem] = res;
-
+vector<ll> s; 
+void commDiv(ll a, ll b) { 
+    ll n = __gcd(a, b); 
+    for (ll i = 1; i <= sqrt(n); i++) { 
+        if (n % i == 0) { 
+            if (n / i == i) s.PB(i); 
+            else s.PB(i) ,s.PB(n/i); 
+        } 
+    } 
 }
 
 void check(){
-	cin >> n >> m >> k;
-	memset(dp ,-1LL ,sizeof(dp));
-	for(ll i = 0 ;i < n ;i++){
-		for(ll j = 0 ;j < m; j++ ){
-			cin >> mat[i][j];
-		}
+	ll a ,b;
+	cin >> a >> b;
+	commDiv(a ,b);
+	sort(ALL(s));
+	ll  n ,l ,r;
+	cin >> n;
+	while(n--){
+		cin >> l >> r;
+		auto it = lower_bound(ALL(s) ,l);
+		if(it != s.end()){
+		    ll ans = -1;
+			while(*it <= r && it != s.end())ans  = *it,it++;
+			cout << ans<<"\n";
+		}else cout <<"-1\n";
 	}
-	ll res = go(0 ,0 ,0 ,0);
-	cout << res;
 }
 
 int32_t main(){

@@ -32,40 +32,33 @@ template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 #endif
 
-const long long MAXN = 71;
-ll n ,m ,k ,dp[MAXN][MAXN][MAXN][MAXN] ,mat[MAXN][MAXN];
-
-ll go(ll i ,ll j ,ll cnt ,ll rem){
-	
-	if(i == n){
-		return rem == 0 ? 0 : LONG_LONG_MIN;
-	}
-	if(j == m || cnt == m / 2){
-		return dp[i][j][cnt][rem] = go(i+1 ,0 ,0 ,rem);
-	}
-	if(dp[i][j][cnt][rem] != -1){
-		return dp[i][j][cnt][rem];
-	}
-	ll res = 0 ,add = ( ( rem - (mat[i][j] % k)) + k) % k;
-
-	if(cnt < m/2 ){
-		res = max(go(i ,j+1 ,cnt ,rem) ,
-				mat[i][j] + go(i ,j+1 ,cnt+1 ,add) );
-	}
-	return dp[i][j][cnt][rem] = res;
-
-}
+const long long MAXN = 1e5 +7;
 
 void check(){
-	cin >> n >> m >> k;
-	memset(dp ,-1LL ,sizeof(dp));
-	for(ll i = 0 ;i < n ;i++){
-		for(ll j = 0 ;j < m; j++ ){
-			cin >> mat[i][j];
-		}
+	ll n ,p;
+	cin >> n >> p;
+	ll tot = 1 ,li ,ri ,can = 0;
+
+	vector<ll> cn(n);
+	pair<ll ,ll> a[n];
+	for(ll i = 0; i < n ;i++){
+		cin >> li >> ri;
+		a[i] = MP(li ,ri);
+		cn[i] = (ri/p - (li-1)/p);
 	}
-	ll res = go(0 ,0 ,0 ,0);
-	cout << res;
+	double ans = 0;
+	
+	for(ll i = 0 ;i < n ;i++){
+		ll ai = cn[i]  ,aj = cn[(i+1)%n];
+		ll li = a[i].F , ri = a[i].S;
+		ll lj = a[(i+1)%n].F ,rj = a[(i+1)%n].S;
+		double not_p_i = (ri - li + 1.0 - ai)/(ri - li + 1.0);
+		double not_p_j = (rj - lj + 1.0 - aj)/(rj - lj + 1.0);
+		double tot_div_p = 1.0 - (not_p_i * not_p_j);
+		ans += tot_div_p;
+	}
+
+	cout <<  setprecision(9) << fixed << ans*2000;
 }
 
 int32_t main(){
