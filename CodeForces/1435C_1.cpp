@@ -32,41 +32,30 @@ template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 #endif
 
-const long long MAXN = 2e2 +7;
-const ll INF = 1e18;
+const long long MAXN = 1e5 +7;
 
-ll memo[MAXN][2*MAXN + 10];
-ll a[MAXN] ,n;
-
-ll go(ll idx ,ll ti){
-	if(idx == n+1){
-		if(ti <= 2*n + 10) return 0;
-		return INF;
-	}
-	if(ti > 2*n + 10) return INF;
-
-	ll &res = memo[idx][ti];
-	if(res != -1)return res;
-
-	res = INF;
-
-	// take out the dish at this time;
-	res = min(res ,abs(a[idx] - ti) + go(idx + 1 ,ti + 1));
-
-	// or dont take out this time;
-	res = min(res ,go(idx ,ti+1));
-	return res;
-}
+ll n,a[MAXN],b[MAXN],cnt,num,vis[MAXN],res=2e9,pos;
+pair<ll,ll> c[MAXN*10];
+inline void add(ll x){if(++vis[x] == 1) num++;}
+inline void sub(ll x){if(--vis[x] == 0) num--;}
 
 void check(){
-	memset(memo ,-1LL ,sizeof(memo));
+	for(ll i=1;i<=6;i++) cin >> a[i];
 	cin >> n;
-	for(ll i = 1 ;i <= n ;i++) cin >>a[i];
-
-	sort(a+1 ,a+n+1);
-
-	ll ans = go(1 ,1);
-	cout << ans<<"\n";
+	for(ll i= 1;i <=n;i++){
+		cin >> b[i];
+		for(ll j=1 ; j<=6 ;j++) c[++cnt]={b[i]-a[j],i};
+	}
+	sort(c+1,c+1+cnt); pos = 1;
+	
+	for(ll i=1 ; i <= cnt; i++){
+		add(c[i].second);
+		while(num == n){
+			res = min(res , c[i].first-c[pos].first);
+			sub(c[pos++].second);
+		}
+	}
+	cout<<res;
 }
 
 int32_t main(){
@@ -75,7 +64,7 @@ int32_t main(){
 	#endif
 	// cin.exceptions(cin.Failbit);
 	int t = 1;	
-	cin >> t;
+	// cin >> t;
 	for(int i = 1 ; i <= t ;i++){
 		// cout << "Case "<< i << ":\n";
 		check();

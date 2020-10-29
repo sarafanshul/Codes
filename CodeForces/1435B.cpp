@@ -32,41 +32,37 @@ template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 #endif
 
-const long long MAXN = 2e2 +7;
-const ll INF = 1e18;
+const long long MAXN = 250007;
 
-ll memo[MAXN][2*MAXN + 10];
-ll a[MAXN] ,n;
-
-ll go(ll idx ,ll ti){
-	if(idx == n+1){
-		if(ti <= 2*n + 10) return 0;
-		return INF;
-	}
-	if(ti > 2*n + 10) return INF;
-
-	ll &res = memo[idx][ti];
-	if(res != -1)return res;
-
-	res = INF;
-
-	// take out the dish at this time;
-	res = min(res ,abs(a[idx] - ti) + go(idx + 1 ,ti + 1));
-
-	// or dont take out this time;
-	res = min(res ,go(idx ,ti+1));
-	return res;
-}
+vector<ll> r(MAXN) ,c(MAXN);
 
 void check(){
-	memset(memo ,-1LL ,sizeof(memo));
-	cin >> n;
-	for(ll i = 1 ;i <= n ;i++) cin >>a[i];
-
-	sort(a+1 ,a+n+1);
-
-	ll ans = go(1 ,1);
-	cout << ans<<"\n";
+	r.clear() ,c.clear();
+	ll n ,m ,tmp;
+	cin >> n >> m;
+	ll row[n][m] ,col[m][n];
+	for(ll i = 0 ;i < n; i++){
+		for(ll j = 0 ;j < m ;j++){
+			cin >> row[i][j];
+			r[row[i][j]] = j;
+		}
+	}
+	for(ll i = 0 ; i < m ;i++){
+		for(ll j = 0 ;j < n; j++){
+			cin >> col[i][j];
+			c[col[i][j]] = j;
+		}
+	}
+	ll ans[n][m];
+	for(ll i = 0 ;i < n ;i++){
+		ll ele = row[i][0];
+		ll p = c[ele];
+// 		ans[p] = row[i];
+        for(ll j = 0 ;j < m ;j++)ans[p][j] = row[i][j];
+	}
+	for(ll i = 0 ;i < n ;i++){
+		for(ll j = 0 ;j < m ;j++)cout << ans[i][j] <<" \n"[j == m-1];
+	}
 }
 
 int32_t main(){

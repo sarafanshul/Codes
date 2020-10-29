@@ -37,16 +37,20 @@ const long long MAXN = 1e5 +7;
 void check(){
 	ll n;
 	cin >> n;
-	ll a[n];
-	for(ll i = 0 ;i < n ;i++) cin >> a[i];
-	ll ans = 0;
-	for(ll i = 0; i < n ;i++){
-		ans++;
+	ll a[n+1] ,l[n+1] ={0};
+	for(ll i = 1 ; i <= n;i++) cin >> a[i];
+	
+	ll par = 1 ,ht = 1;
+	l[1] = 1;
+	for(ll i = 2; i <= n; i++){
 		ll j = i;
-		while(a[j] < a[j+1] && j+1 < n)j++;
+		while(j < n && a[j] <= a[j+1])j++;
+		if(!l[par])par++ ,ht++;
+		l[par+1] += j - i + 1;
+		l[par]--;
 		i = j;
 	}
-	cout << ans<<"\n";
+	cout << ht<<'\n';
 }
 
 int32_t main(){

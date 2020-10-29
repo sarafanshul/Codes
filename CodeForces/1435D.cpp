@@ -1,3 +1,9 @@
+
+/*if we have several consecutive -x, they must be in an ascending order (otherwise we say NO and stop instantly)
+if we have + and a -x after it, we can collapse them (it's not hard to understand that if the answer is YES, we can act this way, just a simple mindfulness exercise)
+Bingo! We've just solved this problem in O(n) using stack (going in the reversed order, putting goods on a stack and then taking them from the top of the stack and putting on the showcase). The only tricky moment left: you must pay attention to the amount of shurikens to avoid the lack of them (e.g. example 2 from the problem).*/
+
+
 #pragma GCC optimize("Ofast")  // remove in mingw32 bit ;
 #pragma GCC target("avx,avx2,fma") 
 #pragma comment(linker, "/stack:200000000")
@@ -32,41 +38,33 @@ template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 #endif
 
-const long long MAXN = 2e2 +7;
-const ll INF = 1e18;
-
-ll memo[MAXN][2*MAXN + 10];
-ll a[MAXN] ,n;
-
-ll go(ll idx ,ll ti){
-	if(idx == n+1){
-		if(ti <= 2*n + 10) return 0;
-		return INF;
-	}
-	if(ti > 2*n + 10) return INF;
-
-	ll &res = memo[idx][ti];
-	if(res != -1)return res;
-
-	res = INF;
-
-	// take out the dish at this time;
-	res = min(res ,abs(a[idx] - ti) + go(idx + 1 ,ti + 1));
-
-	// or dont take out this time;
-	res = min(res ,go(idx ,ti+1));
-	return res;
-}
+const long long MAXN = 1e5 +7;
 
 void check(){
-	memset(memo ,-1LL ,sizeof(memo));
+	char c;
+	ll n;
 	cin >> n;
-	for(ll i = 1 ;i <= n ;i++) cin >>a[i];
-
-	sort(a+1 ,a+n+1);
-
-	ll ans = go(1 ,1);
-	cout << ans<<"\n";
+	vector<ll> a(2*n, - 1);
+	for(ll i = 0 ;i < 2*n ;i++){
+		cin >> c;
+		if(c == '-') cin >> a[i];
+	}
+	ll cost = 0;
+	stack<ll> s ,goods;
+	for(ll i = 2*n - 1 ;i >= 0; i--){
+		if(a[i] == -1){
+			if(s.empty()){cout<<"NO\n";return;}
+			else goods.push(s.top()),s.pop();
+		}else{
+			if(!s.empty() && a[i] > s.top()){cout<<"NO\n";return;}
+			s.push(a[i]);
+		}
+	}
+	cout<<"YES\n";
+	while(!goods.empty()){
+		cout<< goods.top()<<" ";
+		goods.pop();
+	}
 }
 
 int32_t main(){
@@ -75,7 +73,7 @@ int32_t main(){
 	#endif
 	// cin.exceptions(cin.Failbit);
 	int t = 1;	
-	cin >> t;
+	// cin >> t;
 	for(int i = 1 ; i <= t ;i++){
 		// cout << "Case "<< i << ":\n";
 		check();

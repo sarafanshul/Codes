@@ -32,41 +32,29 @@ template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 #endif
 
-const long long MAXN = 2e2 +7;
-const ll INF = 1e18;
+const long long MAXN = 2e5 +7;
 
-ll memo[MAXN][2*MAXN + 10];
-ll a[MAXN] ,n;
-
-ll go(ll idx ,ll ti){
-	if(idx == n+1){
-		if(ti <= 2*n + 10) return 0;
-		return INF;
-	}
-	if(ti > 2*n + 10) return INF;
-
-	ll &res = memo[idx][ti];
-	if(res != -1)return res;
-
-	res = INF;
-
-	// take out the dish at this time;
-	res = min(res ,abs(a[idx] - ti) + go(idx + 1 ,ti + 1));
-
-	// or dont take out this time;
-	res = min(res ,go(idx ,ti+1));
-	return res;
-}
+ll pre[MAXN] = {0} ,a[MAXN] ,can[MAXN];
 
 void check(){
-	memset(memo ,-1LL ,sizeof(memo));
-	cin >> n;
-	for(ll i = 1 ;i <= n ;i++) cin >>a[i];
+	ll n ,k ,q;
+	cin >> n >> k>> q;
+	ll l ,r;
+	for(ll i = 1 ;i <= n ;i++){
+		cin >> l >> r;
+		pre[l]++;
+		pre[r+1]--;
+	}
+	for(ll i = 1 ; i < MAXN ;i++){
+		pre[i] += pre[i-1];
+		if(pre[i] >= k)can[i]++;
+		can[i] += can[i-1];
+	}
 
-	sort(a+1 ,a+n+1);
-
-	ll ans = go(1 ,1);
-	cout << ans<<"\n";
+	while(q--){
+		cin >> l >> r;
+		cout << can[r] - can[l-1] <<"\n"; 
+	}
 }
 
 int32_t main(){
@@ -75,7 +63,7 @@ int32_t main(){
 	#endif
 	// cin.exceptions(cin.Failbit);
 	int t = 1;	
-	cin >> t;
+	// cin >> t;
 	for(int i = 1 ; i <= t ;i++){
 		// cout << "Case "<< i << ":\n";
 		check();

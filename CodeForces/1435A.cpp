@@ -32,41 +32,19 @@ template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 #endif
 
-const long long MAXN = 2e2 +7;
-const ll INF = 1e18;
-
-ll memo[MAXN][2*MAXN + 10];
-ll a[MAXN] ,n;
-
-ll go(ll idx ,ll ti){
-	if(idx == n+1){
-		if(ti <= 2*n + 10) return 0;
-		return INF;
-	}
-	if(ti > 2*n + 10) return INF;
-
-	ll &res = memo[idx][ti];
-	if(res != -1)return res;
-
-	res = INF;
-
-	// take out the dish at this time;
-	res = min(res ,abs(a[idx] - ti) + go(idx + 1 ,ti + 1));
-
-	// or dont take out this time;
-	res = min(res ,go(idx ,ti+1));
-	return res;
-}
+const long long MAXN = 1e5 +7;
 
 void check(){
-	memset(memo ,-1LL ,sizeof(memo));
+	ll n ,sm = 0;
 	cin >> n;
-	for(ll i = 1 ;i <= n ;i++) cin >>a[i];
-
-	sort(a+1 ,a+n+1);
-
-	ll ans = go(1 ,1);
-	cout << ans<<"\n";
+	ll a[n];
+	for(ll i = 0 ;i < n ;i++){
+		cin >> a[i];
+		sm += a[i];
+	}
+	for(ll i = 0; i < n ;i += 2){
+	    cout << -a[i+1] <<" "<< a[i] <<" ";
+	}cout <<"\n";
 }
 
 int32_t main(){
