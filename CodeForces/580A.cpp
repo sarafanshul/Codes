@@ -35,19 +35,17 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 const long long MAXN = 1e5 +7;
 
 void check(){
-	ll n ,k;
-	cin >> n >> k;
-	pair<ll ,ll> a[MAXN];
-	for(ll i = 0; i < n ;i++){ cin >> a[i].F >> a[i].S; }
+	ll n ,cnt = 1 ,a[MAXN];
+	cin >> n;
+	for(ll i =0 ; i < n ;i++) cin >> a[i];
 
-	sort(a ,a+n);
-	ll mx = 0 ,cur = 0 ,j = 0 ;
-	for(ll i = 0 ; i < n ; i++){
-		cur += a[i].S;
-		while(a[i].F - a[j].F >= k) cur -= a[j].S ,j++;
-		mx = max(mx ,cur);
+	ll ans = 1;
+	for(ll i = 1 ;i < n ;i++){
+	    if(a[i-1] > a[i]) cnt = 0;
+	    cnt++;
+	    ans = max(ans, cnt);
 	}
-	cout << mx;
+	cout << ans;
 }
 
 int32_t main(){

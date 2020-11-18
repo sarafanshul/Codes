@@ -32,22 +32,33 @@ template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 #endif
 
-const long long MAXN = 1e5 +7;
+const long long MAXN = 2e6 +7;
 
 void check(){
-	ll n ,k;
-	cin >> n >> k;
-	pair<ll ,ll> a[MAXN];
-	for(ll i = 0; i < n ;i++){ cin >> a[i].F >> a[i].S; }
+	ll n ,m ,a[MAXN] = {0} ,b[MAXN] = {0};
+	cin >> n;
+	set<ll> st;
+	st.insert(0LL);
+	for(ll i = 0; i < n ;i++)cin >> a[i] ,st.insert(a[i]);
+	cin >> m;
+	for(ll j = 0 ;j < m ; j++) cin >> b[j]  ,st.insert(b[j]);
 
 	sort(a ,a+n);
-	ll mx = 0 ,cur = 0 ,j = 0 ;
-	for(ll i = 0 ; i < n ; i++){
-		cur += a[i].S;
-		while(a[i].F - a[j].F >= k) cur -= a[j].S ,j++;
-		mx = max(mx ,cur);
+	sort(b ,b+m);
+
+	ll mx = -2e10 ,uba ,ubb;
+
+	for(auto x : st){
+		auto ua = upper_bound(a ,a+n ,x) - a;
+		ll pta = n*3 - ua;
+		auto ub = upper_bound(b ,b+m ,x) - b;
+		ll ptb = m*3 - ub;
+		if(mx < pta - ptb){
+			uba = pta ,ubb = ptb;
+			mx = pta - ptb;
+		}
 	}
-	cout << mx;
+	cout << uba <<":"<<ubb;
 }
 
 int32_t main(){

@@ -32,22 +32,21 @@ template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 #endif
 
-const long long MAXN = 1e5 +7;
+const long long MAXN = 2e6 +7;
 
 void check(){
 	ll n ,k;
 	cin >> n >> k;
-	pair<ll ,ll> a[MAXN];
-	for(ll i = 0; i < n ;i++){ cin >> a[i].F >> a[i].S; }
-
-	sort(a ,a+n);
-	ll mx = 0 ,cur = 0 ,j = 0 ;
-	for(ll i = 0 ; i < n ; i++){
-		cur += a[i].S;
-		while(a[i].F - a[j].F >= k) cur -= a[j].S ,j++;
-		mx = max(mx ,cur);
+	ll m = (n+1)/2 ,l = n - m;
+	ll a[MAXN];
+	for(ll i = 1 ;i <= n*k ;i++){
+		cin >> a[i];
 	}
-	cout << mx;
+	ll ans = 0 ,x = k;
+	for(ll i = n*k - l ; x > 0 ;i -= l+1){x--;
+		ans += a[i];
+	}
+	cout << ans<<"\n";
 }
 
 int32_t main(){
@@ -56,7 +55,7 @@ int32_t main(){
 	#endif
 	// cin.exceptions(cin.Failbit);
 	int t = 1;	
-	// cin >> t;
+	cin >> t;
 	for(int i = 1 ; i <= t ;i++){
 		// cout << "Case "<< i << ":\n";
 		check();

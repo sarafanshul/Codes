@@ -35,19 +35,26 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 const long long MAXN = 1e5 +7;
 
 void check(){
-	ll n ,k;
-	cin >> n >> k;
-	pair<ll ,ll> a[MAXN];
-	for(ll i = 0; i < n ;i++){ cin >> a[i].F >> a[i].S; }
-
-	sort(a ,a+n);
-	ll mx = 0 ,cur = 0 ,j = 0 ;
-	for(ll i = 0 ; i < n ; i++){
-		cur += a[i].S;
-		while(a[i].F - a[j].F >= k) cur -= a[j].S ,j++;
-		mx = max(mx ,cur);
+	ll n ,c0 ,c1 ,h;
+	string s;
+	cin >> n >> c0 >> c1 >> h >> s;
+	
+	ll cost = 0;
+	for(ll i =0 ; i < n ;i++){
+		if(s[i] == '0') cost += c0;
+		else cost += c1;
 	}
-	cout << mx;
+	for(ll i =0 ; i < n ;i++){
+		if(c0 < c1 && s[i] == '1'){
+			ll x = h - c1 + c0;
+			if(x < 0) cost += x;
+		}
+		if(c1 < c0 && s[i] == '0' ){
+			ll x = h - c0 + c1;
+			if(x < 0) cost += x;
+		}
+	}
+	cout << cost <<"\n";
 }
 
 int32_t main(){
@@ -56,7 +63,7 @@ int32_t main(){
 	#endif
 	// cin.exceptions(cin.Failbit);
 	int t = 1;	
-	// cin >> t;
+	cin >> t;
 	for(int i = 1 ; i <= t ;i++){
 		// cout << "Case "<< i << ":\n";
 		check();
