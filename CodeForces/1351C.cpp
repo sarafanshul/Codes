@@ -1,7 +1,7 @@
-// #pragma GCC optimize("Ofast")  // remove in mingw32 bit ;
-// #pragma GCC target("avx,avx2,fma") 
-// #pragma comment(linker, "/stack:200000000")
-// #pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast")  // remove in mingw32 bit ;
+#pragma GCC target("avx,avx2,fma") 
+#pragma comment(linker, "/stack:200000000")
+#pragma GCC optimize("unroll-loops")
 #include <bits/stdc++.h>
 #define ALL(x) x.begin(),x.end()
 #define PB push_back
@@ -34,20 +34,29 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 
 const long long MAXN = 1e5 +7;
 
-template<typename T = long long >
-inline T __ceil(T a ,T b){return (a + b - 1)/b;}
-
 void check(){
-    #define int long long
-	int n ,mx = 0 ,a[MAXN] ,sm = 0;
-	cin >> n;
-	for(int i = 0 ; i < n ;i++){
-		cin >> a[i];
-		sm += a[i];
-		mx = max(a[i] ,mx);
+	#define int long long 
+	string s;
+	cin >> s;
+	set<pair<pair<int ,int> ,pair<int ,int>>> seg;
+	pair<int ,int> loc = {0 ,0} ,next_loc;
+	int ans = 0;
+
+	for(char c : s){
+		next_loc = loc;
+
+		if(c == 'N') next_loc.S++;
+		else if(c == 'S')next_loc.S--;
+		else if(c == 'E')next_loc.F++;
+		else next_loc.F--;
+
+		if(seg.emplace( min(loc ,next_loc)  ,max(loc, next_loc)).S)
+			ans += 5;
+		else ans++;
+
+		loc = next_loc;
 	}
-	int k = max(__ceil(sm ,n-1) ,mx);
-	cout << k*(n-1) - sm<<'\n';
+	cout << ans <<'\n';
 }
 
 int32_t main(){

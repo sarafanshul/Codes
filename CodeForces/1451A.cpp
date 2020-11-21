@@ -1,7 +1,7 @@
-// #pragma GCC optimize("Ofast")  // remove in mingw32 bit ;
-// #pragma GCC target("avx,avx2,fma") 
-// #pragma comment(linker, "/stack:200000000")
-// #pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast")  // remove in mingw32 bit ;
+#pragma GCC target("avx,avx2,fma") 
+#pragma comment(linker, "/stack:200000000")
+#pragma GCC optimize("unroll-loops")
 #include <bits/stdc++.h>
 #define ALL(x) x.begin(),x.end()
 #define PB push_back
@@ -34,20 +34,18 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 
 const long long MAXN = 1e5 +7;
 
-template<typename T = long long >
-inline T __ceil(T a ,T b){return (a + b - 1)/b;}
-
 void check(){
-    #define int long long
-	int n ,mx = 0 ,a[MAXN] ,sm = 0;
+	ll n;
 	cin >> n;
-	for(int i = 0 ; i < n ;i++){
-		cin >> a[i];
-		sm += a[i];
-		mx = max(a[i] ,mx);
+	ll ans = 0;
+	while(n > 2){
+		if(n%2)n-- ,ans++;
+		if(n == 2)break;
+		n /= n/2;
+		ans++;
 	}
-	int k = max(__ceil(sm ,n-1) ,mx);
-	cout << k*(n-1) - sm<<'\n';
+	if(n == 2) ans++;
+	cout << ans<<'\n';
 }
 
 int32_t main(){

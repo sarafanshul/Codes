@@ -1,7 +1,7 @@
-// #pragma GCC optimize("Ofast")  // remove in mingw32 bit ;
-// #pragma GCC target("avx,avx2,fma") 
-// #pragma comment(linker, "/stack:200000000")
-// #pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast")  // remove in mingw32 bit ;
+#pragma GCC target("avx,avx2,fma") 
+#pragma comment(linker, "/stack:200000000")
+#pragma GCC optimize("unroll-loops")
 #include <bits/stdc++.h>
 #define ALL(x) x.begin(),x.end()
 #define PB push_back
@@ -34,20 +34,37 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 
 const long long MAXN = 1e5 +7;
 
-template<typename T = long long >
-inline T __ceil(T a ,T b){return (a + b - 1)/b;}
+const int64_t INF = 1e17;
+inline int64_t mul(int64_t a, int64_t b){
+	return (INF / a > b ? a * b : INF);
+}
+
+inline int64_t add(int64_t a, int64_t b){
+	return (a + b >= INF ? INF : a + b);
+}
 
 void check(){
-    #define int long long
-	int n ,mx = 0 ,a[MAXN] ,sm = 0;
+	ll n;
 	cin >> n;
-	for(int i = 0 ; i < n ;i++){
-		cin >> a[i];
-		sm += a[i];
-		mx = max(a[i] ,mx);
+	ll a[n] ,sm = 0;
+	for(ll i = 0 ;i < n ;i++) cin >> a[i] ,sm += a[i];
+	sort(a ,a+n);
+	if(n <= 2) {cout << a[0] - 1 ;return;}
+
+	ll ans = sm - n;
+
+	for(ll x = 1 ; ;x++){
+		ll curPow = 1 ,curCost = 0;
+
+		for (int i = 0; i < n; ++i) {
+			curCost = add(curCost, abs(a[i] - curPow));
+			curPow = mul(curPow, x);
+		}
+
+		if (curPow == INF || curPow / x > ans + a[n - 1]) break;
+		ans = min(ans, curCost);
 	}
-	int k = max(__ceil(sm ,n-1) ,mx);
-	cout << k*(n-1) - sm<<'\n';
+	cout << ans <<'\n';
 }
 
 int32_t main(){
@@ -56,7 +73,7 @@ int32_t main(){
 	#endif
 	// cin.exceptions(cin.Failbit);
 	int t = 1;	
-	cin >> t;
+	// cin >> t;
 	for(int i = 1 ; i <= t ;i++){
 		// cout << "Case "<< i << ":\n";
 		check();

@@ -34,20 +34,33 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 
 const long long MAXN = 1e5 +7;
 
-template<typename T = long long >
-inline T __ceil(T a ,T b){return (a + b - 1)/b;}
-
 void check(){
-    #define int long long
-	int n ,mx = 0 ,a[MAXN] ,sm = 0;
-	cin >> n;
-	for(int i = 0 ; i < n ;i++){
-		cin >> a[i];
-		sm += a[i];
-		mx = max(a[i] ,mx);
+	ll n ,k;
+	cin >> n >> k;
+	string a ,b;
+	cin >> a >> b;
+	ll cnta[101] ={0} ,cntb[101] ={0};
+	for(ll i = 0 ;i < n ;i++){
+		cnta[a[i] - 'a']++;
+		cntb[b[i] - 'a']++;
 	}
-	int k = max(__ceil(sm ,n-1) ,mx);
-	cout << k*(n-1) - sm<<'\n';
+	for(ll i = 100; i >= 0 ;i--){
+		if(cnta[i] && !cntb[i]){
+			cout <<"NO\n";
+			return;
+		}
+		if(cntb[i])break;
+	}
+	bool f = 1;
+	for(int i = 0 ;i < 100 ;i++){
+		while(1){
+			if(cnta[i] == cntb[i] || (cnta[i] < k))break;
+			cnta[i] -= k;
+			cnta[i+1] += k;
+		}
+		if(cnta[i] != cntb[i]) f = 0;
+	}
+	cout << (f ? "YES": "NO")<<'\n';
 }
 
 int32_t main(){

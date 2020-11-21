@@ -1,7 +1,7 @@
-// #pragma GCC optimize("Ofast")  // remove in mingw32 bit ;
-// #pragma GCC target("avx,avx2,fma") 
-// #pragma comment(linker, "/stack:200000000")
-// #pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast")  // remove in mingw32 bit ;
+#pragma GCC target("avx,avx2,fma") 
+#pragma comment(linker, "/stack:200000000")
+#pragma GCC optimize("unroll-loops")
 #include <bits/stdc++.h>
 #define ALL(x) x.begin(),x.end()
 #define PB push_back
@@ -32,22 +32,26 @@ template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 #endif
 
-const long long MAXN = 1e5 +7;
-
-template<typename T = long long >
-inline T __ceil(T a ,T b){return (a + b - 1)/b;}
+const long long MAXN = 1e6 +7;
 
 void check(){
-    #define int long long
-	int n ,mx = 0 ,a[MAXN] ,sm = 0;
+	int n;
 	cin >> n;
-	for(int i = 0 ; i < n ;i++){
+	int a[n+5] = {0} ,mp[n+5] = {0};
+	for(int i = 0 ;i < n ;i++){
 		cin >> a[i];
-		sm += a[i];
-		mx = max(a[i] ,mx);
+		mp[a[i]]++;
 	}
-	int k = max(__ceil(sm ,n-1) ,mx);
-	cout << k*(n-1) - sm<<'\n';
+	int c1 = 0 ,c2 = 0;
+	for(int i = 1; i <= n ; i++){
+	    c2 = max(mp[i] ,c2);
+	    c1 += mp[i] > 0;
+	}
+	
+	if(c1 < c2) cout << c1;
+	else if(c1 == c2) cout << c2-1;
+	else cout << c2;
+	cout <<'\n';
 }
 
 int32_t main(){

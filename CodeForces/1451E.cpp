@@ -32,22 +32,68 @@ template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 #endif
 
-const long long MAXN = 1e5 +7;
+const long long MAXN = 1e6 +7;
 
-template<typename T = long long >
-inline T __ceil(T a ,T b){return (a + b - 1)/b;}
+ll clz(unsigned long long N) {
+    return N ? 64 - __builtin_clzll(N) : 0;
+}
 
 void check(){
-    #define int long long
-	int n ,mx = 0 ,a[MAXN] ,sm = 0;
+	ll n;
 	cin >> n;
-	for(int i = 0 ; i < n ;i++){
-		cin >> a[i];
-		sm += a[i];
-		mx = max(a[i] ,mx);
+
+	auto get = [ ] (ll l ,ll r) -> ll{
+		ll ret;
+		cout << "XOR " << l <<' '<< r <<endl;
+		cin >> ret ;
+		if(ret == -1){ exit(0); }
+		return ret;
+	};
+
+	ll a ,o ,x;
+	cout << "AND 1 2"<<endl;
+	cin >> a;
+	cout << "XOR 1 2"<<endl;
+	cin >> x;
+	cout << "OR 1 2"<<endl;
+	cin >> o;
+
+	ll ii ,jj;
+	ll msb = clz(o);
+	vector<pair<ll ,ll>> start;
+	for(ii = 0 ; ii <= n ;ii++){
+		for(jj = 0 ; jj <= n ;jj++){
+			if(clz(ii) > msb+1 || clz(jj) > msb+1)continue;
+			if(((ii & jj) == a) && ((ii ^ jj) == x) && ((ii | jj) == o)){
+				start.PB(MP(ii ,jj));
+			}
+		}
 	}
-	int k = max(__ceil(sm ,n-1) ,mx);
-	cout << k*(n-1) - sm<<'\n';
+	// cout << start;
+	ll v[n+2];
+	for(ll i = 2 ;i < n ;i++){
+		v[i] = get(i ,i+1);
+	}
+	// brute force here
+
+	for(pair<ll ,ll> &pi : start){
+		ll a1 = pi.F ,a2 = pi.S;
+		bool f = 0;
+		for(ll i = 2 ;i < n ; i++){
+			a2 ^= v[i];
+			if(a2 >= n){f = 1;break;}
+		}
+		if(f == 0){
+			a2 = pi.S;
+			cout << "! "<< a1<<" " << a2 ;
+			for(ll i = 2 ;i < n ;i++){
+				a2 ^= v[i];
+				cout << " "<< a2;
+			}
+			cout <<endl;
+			return;
+		}
+	}
 }
 
 int32_t main(){
@@ -56,7 +102,7 @@ int32_t main(){
 	#endif
 	// cin.exceptions(cin.Failbit);
 	int t = 1;	
-	cin >> t;
+	// cin >> t;
 	for(int i = 1 ; i <= t ;i++){
 		// cout << "Case "<< i << ":\n";
 		check();

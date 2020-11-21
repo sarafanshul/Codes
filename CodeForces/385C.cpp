@@ -1,7 +1,7 @@
-// #pragma GCC optimize("Ofast")  // remove in mingw32 bit ;
-// #pragma GCC target("avx,avx2,fma") 
-// #pragma comment(linker, "/stack:200000000")
-// #pragma GCC optimize("unroll-loops")
+#pragma GCC optimize("Ofast")  // remove in mingw32 bit ;
+#pragma GCC target("avx,avx2,fma") 
+#pragma comment(linker, "/stack:200000000")
+#pragma GCC optimize("unroll-loops")
 #include <bits/stdc++.h>
 #define ALL(x) x.begin(),x.end()
 #define PB push_back
@@ -32,22 +32,59 @@ template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 #endif
 
-const long long MAXN = 1e5 +7;
+const long long MAXN = 1e7;
 
-template<typename T = long long >
-inline T __ceil(T a ,T b){return (a + b - 1)/b;}
+#define int long long
+const ll N = MAXN;
+int prim[10000005];
+bool mark[10000005];
+int a[1000005];
+int cnt=0;
+int sum[10000005];
+int res[10000005];
 
-void check(){
-    #define int long long
-	int n ,mx = 0 ,a[MAXN] ,sm = 0;
-	cin >> n;
-	for(int i = 0 ; i < n ;i++){
-		cin >> a[i];
-		sm += a[i];
-		mx = max(a[i] ,mx);
+void init() {
+	for(int i=2;i<=N;i++) {
+		if(mark[i]==false) {
+			prim[++cnt]=i;
+		}
+		for(int j=1;j<=cnt;j++) {
+			if(i*prim[j]>N) {
+				break;
+			}
+			mark[i*prim[j]]=true;
+			if(i%prim[j]==0) {
+				break;
+			}
+		}
 	}
-	int k = max(__ceil(sm ,n-1) ,mx);
-	cout << k*(n-1) - sm<<'\n';
+}
+
+void check() {
+	int n;
+	cin >> n;
+	for(int i=1;i<=n;i++) {
+		cin >> a[i];
+		sum[a[i]]++;
+	}
+	init();
+	for(int i=1;i<=cnt;i++) {
+		for(int j=1;prim[i]*j<=N;j++) {
+			res[prim[i]]+=sum[prim[i]*j];
+		}
+	}
+	
+	for(int i=1;i<=N;i++) {
+		res[i]+=res[i-1];
+	}
+	
+	int m;
+	cin>>m;
+	ll l,r;
+	while(m--){
+	    cin >> l>> r;
+	    cout << res[min(N ,r)] - res[min(N ,l-1)]<<'\n';
+	}
 }
 
 int32_t main(){
@@ -56,7 +93,7 @@ int32_t main(){
 	#endif
 	// cin.exceptions(cin.Failbit);
 	int t = 1;	
-	cin >> t;
+	// cin >> t;
 	for(int i = 1 ; i <= t ;i++){
 		// cout << "Case "<< i << ":\n";
 		check();
