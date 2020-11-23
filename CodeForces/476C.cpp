@@ -221,13 +221,16 @@ mod_int inv_permute(int64_t n, int64_t r) {
 }
 
 void check(){
-	int a ,b;
+	ll a ,b;
 	cin >> a >> b;
 
-	mod_int a1 = a;
-	mod_int b1 = b;
-	mod_int ans = (a*(a+1)*b/2 + a)*(b*(b-1)/2);
-	cout << ans <<'\n';
+	mod_int ans = 0;
+	mod_int sm_b = b*(b-1)/2;
+
+	for(ll i = 1 ; i <= a ;i++){
+		ans += sm_b*(i*b + 1);
+	}
+	cout << ans;
 }
 
 int32_t main(){
