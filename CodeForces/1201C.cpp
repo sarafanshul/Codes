@@ -32,21 +32,26 @@ template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 #endif
 
-const long long MAXN = 1e5 +7;
+const long long MAXN = 2e5 +7;
+ll a[MAXN];
 
 void check(){
-	ll w ,b ,t ,ans = 0;
-	cin >> t >> w >> b;
-	ll g = __gcd(w ,b);
-
-	double lcm = (double)w*b/((double)g);
-
-	ll l = (ll)lcm ,s = w;
-	if(s > b) s = b;
-
-	ans = s*(t/l) - 1 + min(t%l + 1 ,s);
-	g = __gcd(ans ,t);
-	cout << ans/g <<'/'<<t/g<<'\n';
+	ll n ,k ,mx = 0;
+	cin >> n >> k;
+	for(ll i = 1 ; i <= n ; i++){
+		cin >> a[i];
+		mx = max(mx ,a[i]);
+	}
+	sort(a+1 ,a+n+1);
+	ll ans = 0;
+	for(ll i = n/2 + 2 ; i <= n ;i++){
+		if(ans + ( a[i] - a[i-1] ) * ( i - n/2 - 1) > k){
+			cout << a[i-1] + (k - ans)/(i - n/2 - 1);
+			return;
+		}
+		ans += (a[i] - a[i-1] )*(i - n/2 - 1);
+	}
+	cout << a[n] +(k - ans)/ (n - n/2);
 }
 
 int32_t main(){

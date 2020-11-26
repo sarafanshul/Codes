@@ -33,20 +33,23 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 #endif
 
 const long long MAXN = 1e5 +7;
+ll dp[MAXN] = {0};
 
 void check(){
-	ll w ,b ,t ,ans = 0;
-	cin >> t >> w >> b;
-	ll g = __gcd(w ,b);
-
-	double lcm = (double)w*b/((double)g);
-
-	ll l = (ll)lcm ,s = w;
-	if(s > b) s = b;
-
-	ans = s*(t/l) - 1 + min(t%l + 1 ,s);
-	g = __gcd(ans ,t);
-	cout << ans/g <<'/'<<t/g<<'\n';
+	ll n ,m ,a ,b ,c ,d;
+	cin >> n >> m >> c >> d;
+	for(ll i = c ;i <= n ;i++){
+		dp[i] = dp[i - c] + d;
+	}
+	for(ll k = 0 ; k < m ; k++){
+		cin >> a >> b >> c >> d;
+		for(ll i = 0 ; i < a/b ; i++){
+			for(ll j = n ;j >= c ; j--){
+				dp[j] = max( dp[j - c] + d , dp[j] );
+			}
+		}
+	}
+	cout << dp[n] <<'\n';
 }
 
 int32_t main(){

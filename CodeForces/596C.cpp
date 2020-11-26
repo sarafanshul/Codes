@@ -32,21 +32,63 @@ template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 #endif
 
-const long long MAXN = 1e5 +7;
+const long long MAXN = 3e5 +7;
+
+struct point{
+	ll x ,y;
+	bool operator < (const point& other) const{
+		if(x == other.x) return y < other.y;
+		return x < other.x;
+	}
+} a[MAXN];
+
+vector<ll> coords[MAXN];
+ll coords_mp[MAXN] = {0};
 
 void check(){
-	ll w ,b ,t ,ans = 0;
-	cin >> t >> w >> b;
-	ll g = __gcd(w ,b);
+	ll n ,x ,y;
+	const ll ad = 1e5;
 
-	double lcm = (double)w*b/((double)g);
+	cin >> n;
+	
+	for(ll i = 0 ; i < n ;i++){
+		cin >> x >> y;
+		y += ad;
+		a[i].x = x ,a[i].y = y;
+	}
+	
+	sort(a ,a+n);
+	
+	for(ll i = 0 ; i < n ;i++){
+		ll wi = a[i].y - a[i].x;
+		coords[wi].PB(i);
+	}
+	
+	ll w;
+	vector<point> ans(n+1);
+	map<ll ,ll> mx_x;
+	
+	for(ll i = 0 ; i < n ;i++){
+		cin >> w;
+		w += ad;
+		if(coords_mp[w] >= coords[w].size()){
+			cout << "NO\n";
+			return;
+		}
+		ans[i] = a[ coords[w][coords_mp[w]] ];
 
-	ll l = (ll)lcm ,s = w;
-	if(s > b) s = b;
+		if(mx_x.count(ans[i].y) && mx_x[ ans[i].y ] > ans[i].x){
+			cout <<"NO\n";
+			return;
+		}
 
-	ans = s*(t/l) - 1 + min(t%l + 1 ,s);
-	g = __gcd(ans ,t);
-	cout << ans/g <<'/'<<t/g<<'\n';
+		mx_x[ans[i].y] = ans[i].x;
+		coords_mp[w]++;
+	}
+	cout <<"YES\n";
+	for(ll i = 0 ; i < n ;i++){
+		cout << ans[i].x <<' ' <<ans[i].y - ad <<'\n';
+	}
 }
 
 int32_t main(){

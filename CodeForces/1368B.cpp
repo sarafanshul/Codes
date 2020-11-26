@@ -35,18 +35,32 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 const long long MAXN = 1e5 +7;
 
 void check(){
-	ll w ,b ,t ,ans = 0;
-	cin >> t >> w >> b;
-	ll g = __gcd(w ,b);
-
-	double lcm = (double)w*b/((double)g);
-
-	ll l = (ll)lcm ,s = w;
-	if(s > b) s = b;
-
-	ans = s*(t/l) - 1 + min(t%l + 1 ,s);
-	g = __gcd(ans ,t);
-	cout << ans/g <<'/'<<t/g<<'\n';
+	ll a[10] ={0} ,k;
+	cin >> k;
+	for(int i = 0 ;i < 10 ;i++){
+		a[i]++;
+	}
+	auto res = [&]() -> ll{
+		ll o = 1;
+		for(int i = 0 ; i < 10 ;i++){
+			o *= a[i];
+		}
+		return o;
+	};
+	bool f = 1;
+	while(f){
+		if(res() >= k) {f = 0;break;}
+		for(int i = 0 ;i < 10 ;i++){
+			a[i]++;
+			if(res() >= k) {f = 0;break;}
+		}
+	}
+	string s = "codeforces";
+	for(int i = 0 ; i < 10 ;i++){
+		for(ll j = 0 ;j < a[i] ;j++){
+			cout << s[i];
+		}
+	}
 }
 
 int32_t main(){

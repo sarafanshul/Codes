@@ -32,21 +32,60 @@ template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<
 template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 #endif
 
-const long long MAXN = 1e5 +7;
+const long long MAXN = 5007;
+
+ll n ,m ,T;
+int dp[MAXN][MAXN] ,par[MAXN][MAXN];
+bool vis[MAXN];
+vector<pair<ll ,ll>> adj[MAXN];
+vector<ll> ans;
+
+void dfs(ll v){
+	vis[v] = 1;
+	if(v == n){
+		dp[n][1] = 0;
+		return ;
+	}
+	for(auto &pi : adj[v]){
+		if(!vis[pi.F])dfs(pi.F);
+	}
+
+	for(auto &pi : adj[v]){
+		for(ll j = 1 ;j <= n ; j++){
+			if( dp[v][j] > dp[pi.F][j - 1] + pi.S){
+				dp[v][j] = dp[pi.F][j - 1] + pi.S;
+				par[v][j] = pi.F;
+			}
+		}
+	}
+}
 
 void check(){
-	ll w ,b ,t ,ans = 0;
-	cin >> t >> w >> b;
-	ll g = __gcd(w ,b);
+	cin >> n >> m >> T;
+	ll u ,v ,w;
+	memset(dp ,0x3f ,sizeof(dp));
 
-	double lcm = (double)w*b/((double)g);
+	for(int i = 0 ; i < m ; i++){
+		cin >> u >> v >> w;
+		adj[u].PB(MP(v ,w));
+	}
+	dfs(1);
 
-	ll l = (ll)lcm ,s = w;
-	if(s > b) s = b;
-
-	ans = s*(t/l) - 1 + min(t%l + 1 ,s);
-	g = __gcd(ans ,t);
-	cout << ans/g <<'/'<<t/g<<'\n';
+	ll lg = 0 ,node = 1;
+	for(int i = n ;i > 0 ;i--){
+		if(dp[1][i] <= T){
+			lg = i;
+			break;
+		}
+	}
+	while(node != n){
+		ans.PB(node);
+		node = par[node][lg];
+		lg--;
+	}
+	ans.PB(n);
+	cout << ans.size() <<'\n';
+	for(ll&u :ans) cout << u <<' ';
 }
 
 int32_t main(){

@@ -35,18 +35,26 @@ template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p
 const long long MAXN = 1e5 +7;
 
 void check(){
-	ll w ,b ,t ,ans = 0;
-	cin >> t >> w >> b;
-	ll g = __gcd(w ,b);
+	ll n;
+	cin >> n;
 
-	double lcm = (double)w*b/((double)g);
-
-	ll l = (ll)lcm ,s = w;
-	if(s > b) s = b;
-
-	ans = s*(t/l) - 1 + min(t%l + 1 ,s);
-	g = __gcd(ans ,t);
-	cout << ans/g <<'/'<<t/g<<'\n';
+	set<pair<int ,int>> st;
+	int x = 0 ,y = 0;
+	st.insert(MP(x ,y));
+	for(int i = 0 ; i < n ; i++){
+		x++;
+		y++;
+		st.insert(MP(x-1 ,y));
+		st.insert(MP(x+1 ,y));
+		st.insert(MP(x ,y-1));
+		st.insert(MP(x ,y+1));
+		st.insert(MP(x ,y));
+	}
+	st.insert(MP(++x ,++y));
+	cout << st.size()<<'\n';
+	for(auto const & it : st){
+		cout << it.F << ' '<< it.S <<'\n';
+	}
 }
 
 int32_t main(){
