@@ -7,13 +7,16 @@
 #include <bits/stdc++.h>
 #define ALL(x) x.begin(),x.end()
 #define PB push_back
+#define EB emplace_back
 #define F first
 #define S second
 #define ll long long
 #define double long double
 #define MP make_pair
+// #define int long long
 
 using namespace std;
+
 
 #ifdef CUST_DEBUG
 template<class K, class V>ostream& operator<<(ostream&s,const pair<K,V>&p){s<<'<'<<p.F<<','<<p.S<<'>';return s;}
@@ -23,20 +26,36 @@ void __prnt(){cerr<<endl;} template<class T, class...Ts>void __prnt(T&&a,Ts&&...
 #define print(...) __prnt(__VA_ARGS__)
 #else
 #define print(...)
+template<typename A> ostream& operator<<(ostream &cout, vector<A> const &v);
+template<typename A, typename B> ostream& operator<<(ostream &cout, pair<A, B> const &p){return cout<<"("<<p.F<<", "<<p.S<<")";}
+template<typename A> ostream& operator<<(ostream &cout,vector<A> const &v){cout<<"[";for(int i=0;i<v.size();i++){if(i)cout<<", ";cout<<v[i];}return cout<<"]";}
+template<typename A, typename B> istream& operator>>(istream& cin, pair<A, B> &p){cin>>p.F;return cin>>p.S;}
 #endif
 
 const long long MAXN = 1e5 +7;
 
 void check(){
-	
+	ll n ,m ,r ,c;
+	cin >> n >> m >>r >> c;
+	auto dist = [] (ll x1 ,ll y1 ,ll x2 ,ll y2) -> ll{
+		return abs(x1 - x2) + abs(y1 - y2);
+	};
+
+	ll ans = max( { dist(1 ,1 ,r ,c) ,dist(n ,1 ,r ,c) ,
+					dist(1 ,m ,r ,c) ,dist(n ,m ,r ,c) } );
+	cout << ans <<'\n';
 }
 
 int32_t main(){
 	#ifndef CUST_DEBUG
 	ios_base::sync_with_stdio(false); cin.tie(NULL);
 	#endif
+	// cin.exceptions(cin.Failbit);
 	int t = 1;	
-	// cin >> t;
-	for(int i = 1 ; i <= t ;i++){ check(); }
+	cin >> t;
+	for(int i = 1 ; i <= t ;i++){
+		// cout << "Case "<< i << ":\n";
+		check();
+	}
 	return 0;
 }
