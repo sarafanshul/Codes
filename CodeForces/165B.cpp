@@ -4,9 +4,6 @@
 #pragma comment(linker, "/stack:200000000")
 #pragma GCC optimize("unroll-loops")
 #endif
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-#include <ext/pb_ds/detail/standard_policies.hpp>
 #include <bits/stdc++.h>
 #define ALL(x) x.begin(),x.end()
 #define PB push_back
@@ -16,7 +13,6 @@
 #define double long double
 #define MP make_pair
 
-using namespace __gnu_pbds;
 using namespace std;
 
 #ifdef CUST_DEBUG
@@ -29,30 +25,48 @@ void __prnt(){cerr<<endl;} template<class T, class...Ts>void __prnt(T&&a,Ts&&...
 #define print(...)
 #endif
 
-typedef tree<
-	long long, // Key type
-	null_type, // Mapped-policy
-	less<long long>, // Key comparison functor
-	rb_tree_tag, // Specifies which underlying data structure to use
-	tree_order_statistics_node_update> // A policy for updating node invariants
-ordered_set;
-
 const long long MAXN = 1e5 +7;
 
 void check(){
-	
+	ll k ,n;
+	cin >> n >> k;
+	ll l = 0 ,r = n+1 ,m ,ans = 1e10;
+
+	ll pwk[100];
+	pwk[0] = 1;
+	for(ll i = 1 ; i < 100 ; i++){
+		pwk[i] = pwk[i-1] * k;
+	}
+
+	auto get = [&](ll v) -> ll {
+		ll ret = 0 ,i = 0;
+		while(1){
+			if(v / pwk[i] == 0)break;
+			ret += v / pwk[i];
+			i++;
+		}
+		return ret;
+	};
+
+	while(l < r){
+		m = (l + r)/ 2;
+		ll x = get(m);
+		if(x >= n){
+			ans = min(m ,ans);
+			r = m;
+		}else {
+			l = m + 1;
+		}
+	}
+	cout << ans;
 }
 
 int32_t main(){
 	#ifndef CUST_DEBUG
 	ios_base::sync_with_stdio(false); cin.tie(NULL);
 	#endif
-	// cin.exceptions(cin.Failbit);
 	int t = 1;	
 	// cin >> t;
-	for(int i = 1 ; i <= t ;i++){
-		// cout << "Case "<< i << ":\n";
-		check();
-	}
+	for(int i = 1 ; i <= t ;i++){ check(); }
 	return 0;
 }

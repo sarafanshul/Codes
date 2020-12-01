@@ -4,9 +4,6 @@
 #pragma comment(linker, "/stack:200000000")
 #pragma GCC optimize("unroll-loops")
 #endif
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-#include <ext/pb_ds/detail/standard_policies.hpp>
 #include <bits/stdc++.h>
 #define ALL(x) x.begin(),x.end()
 #define PB push_back
@@ -16,7 +13,6 @@
 #define double long double
 #define MP make_pair
 
-using namespace __gnu_pbds;
 using namespace std;
 
 #ifdef CUST_DEBUG
@@ -29,30 +25,35 @@ void __prnt(){cerr<<endl;} template<class T, class...Ts>void __prnt(T&&a,Ts&&...
 #define print(...)
 #endif
 
-typedef tree<
-	long long, // Key type
-	null_type, // Mapped-policy
-	less<long long>, // Key comparison functor
-	rb_tree_tag, // Specifies which underlying data structure to use
-	tree_order_statistics_node_update> // A policy for updating node invariants
-ordered_set;
-
 const long long MAXN = 1e5 +7;
 
 void check(){
-	
+	set<ll > st;
+	ll n;
+	cin >> n;
+	string e;
+	ll x ,ans = 0;
+	for(ll i = 0 ; i < n ; i++){
+		cin >> e >> x;
+		if(e[0] == '+'){
+			st.insert(x);
+			ans = max(ans ,(ll)st.size());
+		}else{
+			auto it = st.find(x);
+			if(it == st.end()){
+				ans++;
+			}else st.erase(it);
+		}
+	}
+	cout << ans<<'\n';
 }
 
 int32_t main(){
 	#ifndef CUST_DEBUG
 	ios_base::sync_with_stdio(false); cin.tie(NULL);
 	#endif
-	// cin.exceptions(cin.Failbit);
 	int t = 1;	
 	// cin >> t;
-	for(int i = 1 ; i <= t ;i++){
-		// cout << "Case "<< i << ":\n";
-		check();
-	}
+	for(int i = 1 ; i <= t ;i++){ check(); }
 	return 0;
 }

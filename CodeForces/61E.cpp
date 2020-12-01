@@ -13,7 +13,7 @@
 #define F first
 #define S second
 #define ll long long
-#define double long double
+// #define double long double
 #define MP make_pair
 
 using namespace __gnu_pbds;
@@ -29,18 +29,42 @@ void __prnt(){cerr<<endl;} template<class T, class...Ts>void __prnt(T&&a,Ts&&...
 #define print(...)
 #endif
 
-typedef tree<
-	long long, // Key type
-	null_type, // Mapped-policy
-	less<long long>, // Key comparison functor
-	rb_tree_tag, // Specifies which underlying data structure to use
-	tree_order_statistics_node_update> // A policy for updating node invariants
-ordered_set;
 
-const long long MAXN = 1e5 +7;
+typedef tree<
+	long long, 
+	null_type, 
+	less<long long>, 
+	rb_tree_tag, 
+	tree_order_statistics_node_update > ordered_set;
+
+const long long MAXN = 1e6 +7;
+
+ll a[MAXN] ,n;
 
 void check(){
-	
+	cin >> n;
+	for(ll i = 0 ; i < n ; i++){
+		cin >> a[i];
+	}
+	ordered_set l_set , r_set ;
+
+	for(ll i = 1 ; i < n ; i++){
+		r_set.insert(a[i]);
+	}
+	ll ans = 0;
+
+	for(ll i = 0 ; i < n ; i++){
+		ll left_cnt = l_set.size() - l_set.order_of_key( a[i] + 1 );
+		ll right_cnt = r_set.order_of_key(a[i]);
+		print(MP(a[i] ,MP( left_cnt ,right_cnt )));
+		
+		// larger elements in left * smaller elements in right to a[i]
+		ans += left_cnt * right_cnt;
+
+		l_set.insert( a[i] );
+		r_set.erase(a[i + 1]);
+	}
+	cout << ans<<'\n';
 }
 
 int32_t main(){
