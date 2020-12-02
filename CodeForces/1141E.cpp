@@ -27,31 +27,38 @@ void __prnt(){cerr<<endl;} template<class T, class...Ts>void __prnt(T&&a,Ts&&...
 
 const long long MAXN = 1e5 +7;
 
-void check(){
-	ll H , n;
-	cin >> H  >> n;
-	ll a[n] ,sm = 0 ,mx_r = 0;
-
-	for(ll i = 0 ; i < n ; i++){
-		cin >> a[i];
-		sm += a[i];
-		if(H - sm <= 0){
-			cout << i+1 <<'\n';return;
+int check(){
+	ll H, n;
+	cin >> H >> n;
+ 
+	vector<ll> v(n);
+	for(auto &x : v)
+		cin >> x;
+ 
+	ll tmp = H, sum = 0, md = 0;
+	for(int i = 0; i < n; i++) {
+		tmp += v[i];
+		sum += v[i];
+		md = max(md, H - tmp);
+		if(tmp <= 0) {
+			cout << i + 1 << '\n';
+			return 0;
 		}
-		mx_r = max(mx_r ,-sm);
+	}    
+	if(sum >= 0) {
+		cout << "-1\n";
+		return 0;
 	}
-	if(sm >= 0) {cout << "-1\n";return;}
-
-	ll df = H - mx_r , mul = df / -sm ;
-	H -= mul*mx_r;
-	print(H ,mx_r ,df ,mul);
-	ll res = mul*n;
-	
-	for(ll i = 0 ;  ; i++){
-		H += a[i%n];
-		res++;
-		print(H ,res);
-		if(H <= 0) {cout << res <<'\n';return;}
+	ll dec = abs(sum);
+	ll rd = max(((H - md)/dec) - 10, 0LL);
+	ll tu = rd * n;
+	H -= dec * rd;
+	for(int i = 0;; i++) {
+		if(H <= 0) {
+			cout << tu + i << '\n';
+			return 0;
+		}
+		H += v[i % n];
 	}
 }
 
