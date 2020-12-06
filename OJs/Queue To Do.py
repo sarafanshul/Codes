@@ -13,6 +13,7 @@ def answer(s ,ln):
 	
 	ans = 0
 	for i in range(ln , 0 ,-1):
+		if s > 2000000000 : break
 		if(s == s+i-1): ans ^= s
 		else :ans ^= xor_util(s ,s+i-1)
 		# print(f's = {s} -> {s+i-1} = {xor_util(s ,s+i-1)} ,{ans}')
