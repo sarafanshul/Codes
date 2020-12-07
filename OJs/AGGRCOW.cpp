@@ -1,8 +1,8 @@
 #ifndef CUST_DEBUG
-#pragma GCC optimize("Ofast")
-#pragma GCC target("avx,avx2,fma") 
-#pragma comment(linker, "/stack:200000000")
-#pragma GCC optimize("unroll-loops")
+// #pragma GCC optimize("Ofast")
+// #pragma GCC target("avx,avx2,fma") 
+// #pragma comment(linker, "/stack:200000000")
+// #pragma GCC optimize("unroll-loops")
 #endif
 #include <bits/stdc++.h>
 #define ALL(x) x.begin(),x.end()
@@ -12,9 +12,9 @@
 #define ll long long
 #define double long double
 #define MP make_pair
-
+ 
 using namespace std;
-
+ 
 #ifdef CUST_DEBUG
 template<class K, class V>ostream& operator<<(ostream&s,const pair<K,V>&p){s<<'<'<<p.F<<','<<p.S<<'>';return s;}
 template<class T, class=typename T::value_type, class=typename enable_if<!is_same<T,string>::value>::type>
@@ -24,35 +24,44 @@ void __prnt(){cerr<<endl;} template<class T, class...Ts>void __prnt(T&&a,Ts&&...
 #else
 #define print(...)
 #endif
-
+ 
 const long long MAXN = 1e5 +7;
-
-
+ 
 void check(){
-	ll n ,k;
-	cin >> n >> k;
-	vector<pair<ll ,ll>> a(n);
-	for(ll i = 0 ; i < n ; i++){
-		cin >> a[i].F >> a[i].S;
-	}
-
-	auto get = [&] (ll i ,ll j) -> ll {
-		return abs( a[i].F - a[j].F ) + abs( a[i].S - a[j].S );
-	};
+	ll n ,c;
+	cin >> n >> c;
+	ll a[n];
+	for(ll i = 0 ; i < n ; i++) cin >> a[i];
+ 
+	sort(a ,a+n);
 	
-	for(ll j = 0 ; j < n ; j++){
-		bool f = 1;
-		for(ll i = 0 ; i < n ; i++){
-			f &= (get(j ,i) <= k);
+	ll l = 0 ,r = 1e10 ,m ,ans = l;
+ 
+	auto ok = [ & ] (ll d) -> bool {
+		ll prev = a[0];
+		ll tot = 1;
+		for(ll i = 1 ; i < n ; i++){
+			if(a[i] - prev >= d){
+				tot++;
+				prev = a[i];
+			}
 		}
-		if(f){
-			cout << 1 <<'\n';
-			return;
+		return (tot >= c) ;
+	};
+ 
+	while(l < r){
+		m = (l + r) / 2;
+		// print(l ,r ,m ,ok(m));
+		if(ok(m)){
+			ans = m;
+			l = m + 1;
+		}else {
+			r = m;
 		}
 	}
-	cout << "-1\n";
+	cout << ans<<'\n';
 }
-
+ 
 int32_t main(){
 	#ifndef CUST_DEBUG
 	ios_base::sync_with_stdio(false); cin.tie(NULL);

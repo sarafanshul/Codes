@@ -27,30 +27,8 @@ void __prnt(){cerr<<endl;} template<class T, class...Ts>void __prnt(T&&a,Ts&&...
 
 const long long MAXN = 1e5 +7;
 
-
 void check(){
-	ll n ,k;
-	cin >> n >> k;
-	vector<pair<ll ,ll>> a(n);
-	for(ll i = 0 ; i < n ; i++){
-		cin >> a[i].F >> a[i].S;
-	}
 
-	auto get = [&] (ll i ,ll j) -> ll {
-		return abs( a[i].F - a[j].F ) + abs( a[i].S - a[j].S );
-	};
-	
-	for(ll j = 0 ; j < n ; j++){
-		bool f = 1;
-		for(ll i = 0 ; i < n ; i++){
-			f &= (get(j ,i) <= k);
-		}
-		if(f){
-			cout << 1 <<'\n';
-			return;
-		}
-	}
-	cout << "-1\n";
 }
 
 int32_t main(){
@@ -58,7 +36,7 @@ int32_t main(){
 	ios_base::sync_with_stdio(false); cin.tie(NULL);
 	#endif
 	int t = 1;	
-	cin >> t;
+	// cin >> t;
 	for(int i = 1 ; i <= t ;i++){ check(); }
 	return 0;
 }

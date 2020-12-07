@@ -25,32 +25,19 @@ void __prnt(){cerr<<endl;} template<class T, class...Ts>void __prnt(T&&a,Ts&&...
 #define print(...)
 #endif
 
-const long long MAXN = 1e5 +7;
-
+const long long MAXN = 1e2 +7;
 
 void check(){
-	ll n ,k;
-	cin >> n >> k;
-	vector<pair<ll ,ll>> a(n);
+	ll n ,a[MAXN] ,sm = 0 ,mx = 0;
+	cin >> n;
 	for(ll i = 0 ; i < n ; i++){
-		cin >> a[i].F >> a[i].S;
+		cin >> a[i];
+		sm += a[i];
+		mx = max(mx ,a[i]);
 	}
-
-	auto get = [&] (ll i ,ll j) -> ll {
-		return abs( a[i].F - a[j].F ) + abs( a[i].S - a[j].S );
-	};
+	bool f = !(sm%2) && mx <= sm-mx;
+	cout <<(f ?"HL":"T") <<'\n';
 	
-	for(ll j = 0 ; j < n ; j++){
-		bool f = 1;
-		for(ll i = 0 ; i < n ; i++){
-			f &= (get(j ,i) <= k);
-		}
-		if(f){
-			cout << 1 <<'\n';
-			return;
-		}
-	}
-	cout << "-1\n";
 }
 
 int32_t main(){

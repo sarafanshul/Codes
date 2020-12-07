@@ -45,14 +45,17 @@ int check(){
 			return 0;
 		}
 	}    
+	
 	if(sum >= 0) {
 		cout << "-1\n";
 		return 0;
 	}
+	
 	ll dec = abs(sum);
 	ll rd = max(((H - md)/dec) - 10, 0LL);
 	ll tu = rd * n;
 	H -= dec * rd;
+
 	for(int i = 0;; i++) {
 		if(H <= 0) {
 			cout << tu + i << '\n';
