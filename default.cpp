@@ -28,7 +28,7 @@ void __prnt(){cerr<<endl;} template<class T, class...Ts>void __prnt(T&&a,Ts&&...
 const long long MAXN = 1e5 +7;
 
 void check(){
-	
+
 }
 
 int32_t main(){
