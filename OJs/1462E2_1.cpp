@@ -228,8 +228,8 @@ void check(){
 
 	for(ll i = 0 ; i < n ; i++){
 		ll cur = a[i] + k ;
-		ll ub = upper_bound( ALL(a) ,cur ) - a.begin() - 1;
-		ans += choose(ub - i ,m - 1);
+		ll ub = upper_bound( ALL(a) ,cur ) - a.begin();
+		ans += choose(ub - i - 1 ,m - 1);
 	}
 	cout << ans <<'\n';
 }

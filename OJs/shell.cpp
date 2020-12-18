@@ -1,3 +1,8 @@
+/*
+ID: dt200021
+TASK: shell
+LANG: C++                 
+*/
 #ifndef CUST_DEBUG
 #pragma GCC optimize("Ofast")
 #pragma GCC target("avx,avx2,fma") 
@@ -25,36 +30,34 @@ void __prnt(){cerr<<endl;} template<class T, class...Ts>void __prnt(T&&a,Ts&&...
 #define print(...)
 #endif
 
-const long long MAXN = 500;
-
-ll n , a[MAXN];
-ll pre[MAXN] , dp[MAXN][MAXN]; 
-
-void check(){
-	cin >> n;
-	for(ll i = 0; i < n ; i++)
-		cin >> a[i] ;
-
-	for(ll i = 0  ; i < n ; i++)
-		pre[i + 1] = pre[i] + a[i] ;
-
-	for(ll i = n - 1; i >= 0 ; i--){
-		for(ll j = i + 2 ; j <= n ; j++){
-			dp[i][j] = 1e18 ;
-			for(ll k = i + 1 ; k < j ; k++){
-				dp[i][j] = min( dp[i][k] + dp[k][j] + pre[j] - pre[i] , dp[i][j] );
-			}
-		}
-	}
-	cout << dp[0][n] ;
-}
+const long long MAXN = 1e5 +7;
 
 int32_t main(){
 	#ifndef CUST_DEBUG
-	ios_base::sync_with_stdio(false); cin.tie(NULL);
+	ofstream cout ("shell.out");
+    ifstream cin ("shell.in");
 	#endif
 	int t = 1;	
 	// cin >> t;
-	for(int i = 1 ; i <= t ;i++){ check(); }
+	for(int ii = 1 ; ii <= t ;ii++){
+		int n;
+		cin >> n;
+		vector<int> cur(4) , points(4 ,0);
+		for(int i = 0 ; i <= 3 ; i++) 
+			cur[i] = i;
+
+		for(int i = 0 ; i < n ; i++){
+			int a , b , g;
+			cin >> a >> b >> g;
+			swap(cur[b] , cur[a]);
+			print(cur ,points);
+			points[cur[g]]++;
+		}
+		int mx = 0;
+		for(int i : points)
+			mx = max(mx ,i);
+		cout << mx <<'\n';
+		print(n ,mx);
+	}
 	return 0;
 }

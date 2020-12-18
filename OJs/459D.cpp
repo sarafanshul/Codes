@@ -4,6 +4,9 @@
 #pragma comment(linker, "/stack:200000000")
 #pragma GCC optimize("unroll-loops")
 #endif
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+#include <ext/pb_ds/detail/standard_policies.hpp>
 #include <bits/stdc++.h>
 #define ALL(x) x.begin(),x.end()
 #define PB push_back
@@ -13,6 +16,7 @@
 #define double long double
 #define MP make_pair
 
+using namespace __gnu_pbds;
 using namespace std;
 
 #ifdef CUST_DEBUG
@@ -25,28 +29,45 @@ void __prnt(){cerr<<endl;} template<class T, class...Ts>void __prnt(T&&a,Ts&&...
 #define print(...)
 #endif
 
-const long long MAXN = 500;
+typedef tree<
+	pair<ll ,ll> , // Key type
+	null_type, // Mapped-policy
+	less<pair<ll ,ll>>, // Key comparison functor
+	rb_tree_tag, // Specifies which underlying data structure to use
+	tree_order_statistics_node_update> // A policy for updating node invariants
+ordered_set;
 
-ll n , a[MAXN];
-ll pre[MAXN] , dp[MAXN][MAXN]; 
+const long long MAXN = 1e5 +7;
 
 void check(){
+	ll n;
 	cin >> n;
-	for(ll i = 0; i < n ; i++)
-		cin >> a[i] ;
+	vector<ll> a(n) ,ai(n) ,aj(n);
 
-	for(ll i = 0  ; i < n ; i++)
-		pre[i + 1] = pre[i] + a[i] ;
+	for(ll i = 0 ; i < n ; i++)
+		cin >> a[i];
 
-	for(ll i = n - 1; i >= 0 ; i--){
-		for(ll j = i + 2 ; j <= n ; j++){
-			dp[i][j] = 1e18 ;
-			for(ll k = i + 1 ; k < j ; k++){
-				dp[i][j] = min( dp[i][k] + dp[k][j] + pre[j] - pre[i] , dp[i][j] );
-			}
-		}
+	map<ll ,ll> mp_a;
+	for(ll i = 0 ; i < n ; i++){
+		ai[i] = ++mp_a[a[i]] ;
 	}
-	cout << dp[0][n] ;
+
+	map<ll ,ll> mp_b;
+	ordered_set sg ;
+	for(ll i = n-1 ; i >= 0 ; i--){
+		aj[i] = ++mp_b[a[i]] ;
+		sg.insert( { aj[i] , i} );
+	}
+	
+	ll ans = 0;
+
+	for(ll i = 0 ; i < n ; i++){
+		ll tot = sg.order_of_key( { ai[i] , -1 } ) - (ai[i] > aj[i]);// same are not needed
+		print( ai[i] , tot ) ;
+		ans += tot ; 
+		sg.erase( {aj[i] , i} );
+	}
+	cout << ans << '\n';
 }
 
 int32_t main(){

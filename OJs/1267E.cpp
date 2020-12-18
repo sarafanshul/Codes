@@ -25,28 +25,43 @@ void __prnt(){cerr<<endl;} template<class T, class...Ts>void __prnt(T&&a,Ts&&...
 #define print(...)
 #endif
 
-const long long MAXN = 500;
-
-ll n , a[MAXN];
-ll pre[MAXN] , dp[MAXN][MAXN]; 
+const long long MAXN = 1e5 +7;
 
 void check(){
-	cin >> n;
-	for(ll i = 0; i < n ; i++)
-		cin >> a[i] ;
-
-	for(ll i = 0  ; i < n ; i++)
-		pre[i + 1] = pre[i] + a[i] ;
-
-	for(ll i = n - 1; i >= 0 ; i--){
-		for(ll j = i + 2 ; j <= n ; j++){
-			dp[i][j] = 1e18 ;
-			for(ll k = i + 1 ; k < j ; k++){
-				dp[i][j] = min( dp[i][k] + dp[k][j] + pre[j] - pre[i] , dp[i][j] );
-			}
+	#define int long long int
+	#define vi vector<int>
+	#define vvi vector<vi>
+	int n, m;
+	cin >> n >> m;
+	vvi a(m);
+	for(int i = 0; i < m; i++) {
+		for(int j = 0; j < n; j++) {
+			int num;
+			cin >> num;
+			a[i].PB(num);
 		}
 	}
-	cout << dp[0][n] ;
+	vi ans = { -1 };
+	for(int i = 0; i < n - 1; i++) {
+		vvi v;
+		vi temp;
+		int sum = 0;
+		for(int j = 0; j < m; j++) {
+			sum += (a[j][i] - a[j][n - 1]);
+			v.PB({ a[j][i] - a[j][n - 1], j });
+		}
+		sort(v.begin(), v.end());
+		for(int k = 0; k < v.size() && sum < 0; k++) {
+			temp.PB(v[k][1]);
+			sum -= v[k][0];
+		}
+		if(ans == vi({ -1 }) || ans.size() > temp.size()) {
+			ans = temp;
+		}
+	}
+	cout << ans.size() << endl;
+	for(int i : ans)
+		cout << i + 1 << " ";
 }
 
 int32_t main(){

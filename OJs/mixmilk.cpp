@@ -1,3 +1,8 @@
+/*
+ID: dt200021
+TASK: mixmilk
+LANG: C++                 
+*/
 #ifndef CUST_DEBUG
 #pragma GCC optimize("Ofast")
 #pragma GCC target("avx,avx2,fma") 
@@ -25,36 +30,35 @@ void __prnt(){cerr<<endl;} template<class T, class...Ts>void __prnt(T&&a,Ts&&...
 #define print(...)
 #endif
 
-const long long MAXN = 500;
-
-ll n , a[MAXN];
-ll pre[MAXN] , dp[MAXN][MAXN]; 
-
-void check(){
-	cin >> n;
-	for(ll i = 0; i < n ; i++)
-		cin >> a[i] ;
-
-	for(ll i = 0  ; i < n ; i++)
-		pre[i + 1] = pre[i] + a[i] ;
-
-	for(ll i = n - 1; i >= 0 ; i--){
-		for(ll j = i + 2 ; j <= n ; j++){
-			dp[i][j] = 1e18 ;
-			for(ll k = i + 1 ; k < j ; k++){
-				dp[i][j] = min( dp[i][k] + dp[k][j] + pre[j] - pre[i] , dp[i][j] );
-			}
-		}
-	}
-	cout << dp[0][n] ;
-}
+const long long MAXN = 1e5 +7;
 
 int32_t main(){
 	#ifndef CUST_DEBUG
-	ios_base::sync_with_stdio(false); cin.tie(NULL);
+	ofstream cout ("mixmilk.out");
+    ifstream cin ("mixmilk.in");
 	#endif
 	int t = 1;	
 	// cin >> t;
-	for(int i = 1 ; i <= t ;i++){ check(); }
+	for(int ii = 1 ; ii <= t ;ii++){
+		vector<int> c(4) , m(4);
+		for(int i = 0 ; i < 3 ; i++) 
+			cin >> c[i] >> m[i]; 
+		int x = 100 ,i = 0;
+		while(x--){
+			// (i)%3 -> (i + 1)%3
+			int fr = i%3 , to = (i + 1)%3;
+			int can = m[fr] , y = c[to] - m[to];
+			if(can > y){
+				m[fr] -= y;
+				m[to] += y;
+			}else{
+				m[fr] = 0;
+				m[to] += can;
+			}
+			print( fr ,to ,m );
+			i++;
+		}
+		cout << m[0] <<'\n' << m[1] <<'\n' << m[2] <<'\n';
+	}
 	return 0;
 }
