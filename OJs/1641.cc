@@ -24,49 +24,42 @@ void __prnt(){cerr<<endl;} template<class T, class...Ts>void __prnt(T&&a,Ts&&...
 #define print(...)
 #endif
 
-const long long MAXN = 2e5 +7;
+const long long MAXN = 1e5 +7;
 
 void check(){
-	ll n ,m ;
-	cin >> n >> m; 
-	vector<ll> a( n ) , pos( n ) ;
-	for(ll&i : a)
-		cin >> i , i-- ;
+	ll n ,k ;
+	cin >> n >> k ;
+	vector<ll > a( n ) ;
+	map<ll ,set<ll>> pos ;
 
-	for(ll i = 0 ; i < n ; i++)
-		pos[ a[i] ] = i ;
+	for(ll i = 0 ; i < n; i++){
+		cin >> a[i] ;
+		pos[ a[i] ].insert( i ) ;
+	}
 
-	ll ans = 1 ;
-	for(ll i = 1 ; i < n ; i++)
-		ans += ( pos[i] < pos[i - 1] ) ;
+	sort( ALL(a) ) ;
 
-	set<pair<ll ,ll>> st ;
-
-	auto add = [&](ll i ) { 
-		if( a[i] > 0 )
-			st.insert( { a[i] - 1 , a[i] } ) ;
-		if( a[i] < n - 1 ) 
-			st.insert( { a[i] , a[i] + 1 } ) ;
+	auto idx = [&](ll v) -> ll {
+		ll val = *pos[ v ].begin() ;
+		pos[v].erase( pos[ v ].begin() ) ;
+		return ++val ;
 	} ;
 
-	while( m-- ){
-		ll i ,j ; cin >> i >> j ; i-- , j-- ;
-		add(i) ; add(j) ;
-
-		ll _old = 0 , _new = 0 ;
-		for(const auto &[ x0 , x1 ] : st)
-			_old += pos[ x1 ] < pos[ x0 ] ;
-		
-		swap( a[i] , a[j] ) ; swap( pos[ a[i] ] , pos[ a[j] ] ) ;
-
-		for(const auto &[ x0 , x1 ] : st)
-			_new += pos[ x1 ] < pos[ x0 ] ;
-
-		print( "VAL" , ans , _old , _new ) ;
-		ans = ans - _old + _new ;
-		cout << ans << '\n' ;
-		st.clear() ;
+	ll l , r ;
+	for(ll i = 0 ; i + 2 < n ; i++){
+		l = i + 1 ;
+		r = n - 1 ;
+		while( l < r ){
+			if( a[i] + a[l] + a[r] == k ){
+				cout << idx(a[l]) <<' ' << idx(a[r]) << ' ' << idx(a[i]) << '\n' ;
+				return ;
+			}
+			else if ( a[i] + a[l] + a[r] < k ) l++ ;
+			else r-- ;
+		}
 	}
+	
+	cout << "IMPOSSIBLE\n" ;
 }
 
 int32_t main(){

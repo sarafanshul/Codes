@@ -12,13 +12,12 @@
 #define PB push_back
 #define F first
 #define S second
-#define ll long long
-#define double long double
 #define MP make_pair
-
+using ll = long long ;
+using db = long double ; // or double, if TL is tight
+#define arr array
 using namespace __gnu_pbds;
 using namespace std;
-
 #ifdef CUST_DEBUG
 template<class K, class V>ostream& operator<<(ostream&s,const pair<K,V>&p){s<<'<'<<p.F<<','<<p.S<<'>';return s;}
 template<class T, class=typename T::value_type, class=typename enable_if<!is_same<T,string>::value>::type>
@@ -28,16 +27,14 @@ void __prnt(){cerr<<endl;} template<class T, class...Ts>void __prnt(T&&a,Ts&&...
 #else
 #define print(...)
 #endif
-
-typedef tree<
-	long long, // Key type
+template<class T> using pqg = priority_queue<T,vector<T>,greater<T>>;
+template< class T > using ordered_set =  tree<
+	T, // Key type
 	null_type, // Mapped-policy
-	less<long long>, // Key comparison functor
+	less<T>, // Key comparison functor
 	rb_tree_tag, // Specifies which underlying data structure to use
-	tree_order_statistics_node_update> // A policy for updating node invariants
-ordered_set;
-
-const long long MAXN = 1e5 +7;
+	tree_order_statistics_node_update> ; // A policy for updating node invariants	
+const long long MAXN = 2e5 +7;
 
 void check(){
 	
@@ -47,12 +44,8 @@ int32_t main(){
 	#ifndef CUST_DEBUG
 	ios_base::sync_with_stdio(false); cin.tie(NULL);
 	#endif
-	// cin.exceptions(cin.Failbit);
-	int t = 1;	
+	int t_c = 1;	
 	// cin >> t;
-	for(int i = 1 ; i <= t ;i++){
-		// cout << "Case "<< i << ":\n";
-		check();
-	}
+	for(int i = 1 ; i <= t_c ;i++){ print("Case : " , i) ; check(); }
 	return 0;
 }

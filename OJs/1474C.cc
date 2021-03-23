@@ -26,7 +26,48 @@ template<class T> using pqg = priority_queue<T,vector<T>,greater<T>>;
 const long long MAXN = 2e5 +7;
 
 void check(){
+	ll n;
+	cin >> n ;
+	vector<ll> a(2*n) ;
+	for(ll i = 0 ; i < 2*n ; i++){
+		cin >> a[i] ; 
+	}
+	sort( ALL(a) ) ;
 
+	function<vector<ll>(ll)> can = [&](ll x) -> vector<ll> {
+		multiset<ll> mst ;
+		for(ll & e : a)
+			mst.insert(e) ;
+		vector<ll> ans ;
+
+		for(ll i = 0 ; i < n ; i++){
+			auto it1 = mst.end() ;
+			it1-- ;
+			ll y = x - *it1 ;
+			mst.erase( it1 ) ;
+			auto is_in = mst.find( y ) ;
+			if( is_in == mst.end() ) return { };
+
+			ans.PB( x - y ) ;
+			ans.PB( y ) ;
+			x = max( x - y , y ) ;
+			mst.erase( is_in ) ;
+		}
+		return ans ;
+	} ;
+
+	for(ll i = 0 ; i < 2 * n - 1 ; i++ ){
+		ll x = a[i] + a[2* n - 1] ;
+		auto ans = can( x ) ;
+		if( ans.size() ){
+			cout << "YES\n" << x <<'\n' ;
+			for(ll j = 0 ; j < n ; j++){
+				cout << ans[ 2*j ] << ' ' << ans[2 * j + 1] << '\n' ;
+			}
+			return ;
+		}
+	}
+	cout << "NO\n" ;
 }
 
 int32_t main(){
@@ -34,7 +75,7 @@ int32_t main(){
 	ios_base::sync_with_stdio(false); cin.tie(NULL);
 	#endif
 	int t_c = 1;	
-	// cin >> t;
+	cin >> t_c;
 	for(int i = 1 ; i <= t_c ;i++){ print("Case : " , i) ; check(); }
 	return 0;
 }

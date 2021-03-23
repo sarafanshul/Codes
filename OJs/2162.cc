@@ -24,48 +24,24 @@ void __prnt(){cerr<<endl;} template<class T, class...Ts>void __prnt(T&&a,Ts&&...
 #define print(...)
 #endif
 
-const long long MAXN = 2e5 +7;
+const long long MAXN = 1e5 +7;
+
 
 void check(){
-	ll n ,m ;
-	cin >> n >> m; 
-	vector<ll> a( n ) , pos( n ) ;
-	for(ll&i : a)
-		cin >> i , i-- ;
+	ll n; 
+	cin >> n ;
+	ll a = 1 , b = 0 ;
+	while( n > 0 ){
+		for(ll i = 2 ; i <= n ; i += 2)
+			cout << a*i + b << ' ' ;
 
-	for(ll i = 0 ; i < n ; i++)
-		pos[ a[i] ] = i ;
-
-	ll ans = 1 ;
-	for(ll i = 1 ; i < n ; i++)
-		ans += ( pos[i] < pos[i - 1] ) ;
-
-	set<pair<ll ,ll>> st ;
-
-	auto add = [&](ll i ) { 
-		if( a[i] > 0 )
-			st.insert( { a[i] - 1 , a[i] } ) ;
-		if( a[i] < n - 1 ) 
-			st.insert( { a[i] , a[i] + 1 } ) ;
-	} ;
-
-	while( m-- ){
-		ll i ,j ; cin >> i >> j ; i-- , j-- ;
-		add(i) ; add(j) ;
-
-		ll _old = 0 , _new = 0 ;
-		for(const auto &[ x0 , x1 ] : st)
-			_old += pos[ x1 ] < pos[ x0 ] ;
-		
-		swap( a[i] , a[j] ) ; swap( pos[ a[i] ] , pos[ a[j] ] ) ;
-
-		for(const auto &[ x0 , x1 ] : st)
-			_new += pos[ x1 ] < pos[ x0 ] ;
-
-		print( "VAL" , ans , _old , _new ) ;
-		ans = ans - _old + _new ;
-		cout << ans << '\n' ;
-		st.clear() ;
+		if( n&1 ) {
+			cout << a + b << ' ' ;
+			b += a ;
+		}else 
+		b -= a ;
+		a <<= 1 ;
+		n >>= 1 ; 
 	}
 }
 
