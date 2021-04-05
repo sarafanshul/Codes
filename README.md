@@ -1,4 +1,5 @@
-#Quack Watch
+# Quack Watch
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/sarafanshul/Codes/graphs/commit-activity)
 
 ## C++ Template
 
