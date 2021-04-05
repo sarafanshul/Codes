@@ -1,9 +1,9 @@
 #Quack Watch
 
 ## C++ Template
+
 <details>
 <summary>Here Senpai </summary>
-<br>
 
 ```c++
 #ifndef CUST_DEBUG
@@ -47,22 +47,20 @@ int32_t main(){
 	return 0;
 }
 ```
-<br>
 </details>
 
 <details>
 <summary>Compile with </summary>
-<br>
+
 ```shell
 g++ -std=c++17 -D CUST_DEBUG -D_GLIBCXX_ASSERTIONS -Wall -Wshadow $F
 ```
-<br>
 </details>
 
 ## Kotlin Template
 <details> 
 <summary> Hit Me !! </summary>
-<br>
+
 ```kotlin
 import java.lang.AssertionError
 import java.util.*
@@ -121,16 +119,12 @@ fun main(){
 	}
 }
 ```
-
 </details>
 
-
-
 ## Profile (powershell)
-
 <details>
 <summary>Ara Ara</summary>
-<br>
+
 ```shell
 # alias for sublime
 Set-Alias subl "C:\Program Files\Sublime Text 3\sublime_text.exe"
