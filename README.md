@@ -181,3 +181,27 @@ function scl{
 }
 ```
 </details>
+	
+## Sublime build settings
+	
+<details>
+<summary>Build system (C++)</summary>
+
+```shell
+{
+ "shell_cmd":"g++ -D CUST_DEBUG -D_GLIBCXX_ASSERTIONS -Wall -Wshadow \"${file}\"",
+ "file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$",
+ "working_dir": "${file_path}",
+ "selector": "source.c, source.c++ , source.cc",
+}
+```
+</details>
+	
+<details>
+<summary>Key bindings</summary>
+
+```shell
+[{"keys": ["f5"],"command": "build", },]
+
+```
+</details>
